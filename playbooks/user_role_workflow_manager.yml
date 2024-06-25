@@ -20,14 +20,24 @@
         config_verify: True
         dnac_api_task_timeout: 1000
         dnac_task_poll_interval: 1
-        state: merged
+        
+        # state: merged
         # config:
-        #   - username: "ajithandrewj"
+        #   - first_name: "ajith"
+        #     last_name: "andrew"
+        #     username: "ajithandrewj"             # Should not be empty
+        #     email: "ajith.andrew@example.com"
+        #     password: "Ajith@123"                # For creation it should not be empty
+        #     role_list: ["SUPER-ADMIN-ROLE"]      # Should not be empty
+        
+        state: merged
         config:
-          - firstName: "ajith"
-            lastName: "andrew"
+          - first_name: "ajith"
+            last_name: "andrew"
+            username: "ajithandrewj"           # Should not be empty
             email: "ajith.andrew@example.com"
-            password: "Ajith@123"
-            username: "ajithandrewj"
-            roleList: ["SUPER-ADMIN-ROLE"]
-
+            role_list: ["SUPER-ADMIN-ROLE"]
+        
+        # state: deleted
+        # config:
+        #   - username: "ajithandrewj"           # Should not be empty

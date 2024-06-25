@@ -626,12 +626,12 @@ class User(DnacBase):
         
         userlist = self.payload.get("config")
         userlist = self.camel_to_snake_case(userlist)
-        user_details = dict(first_name = dict(required=False, type='str'),
-                    last_name = dict(required=False, type='str'),
-                    email = dict(required=False, type='str'),
-                    password = dict(required=False, type='str'),
-                    username = dict(required=False, type='str'),
-                    role_list = dict(required=False, type='list', elements='str'),
+        user_details = dict(first_name = dict(required = False, type = 'str'),
+                    last_name = dict(required = False, type = 'str'),
+                    email = dict(required = False, type = 'str'),
+                    password = dict(required = False, type = 'str'),
+                    username = dict(required = True, type = 'str'),
+                    role_list = dict(required = False, type = 'list', elements='str'),
                     )
         valid_param, invalid_param = validate_list_of_dicts(userlist, user_details)
 
@@ -649,7 +649,7 @@ class User(DnacBase):
         return self
 
 
-    def valid_create_user_config_parameters(self, user_config):
+    def valid_user_config_parameters(self, user_config):
         """
         Addtional validation for the create user configuration payload.
         Parameters:
@@ -715,108 +715,6 @@ class User(DnacBase):
         return self
 
 
-    def valid_update_user_config_parameters(self, user_config):
-        """
-        Addtional validation for the create user configuration payload.
-        Parameters:
-          - self (object): An instance of a class used for interacting with Cisco Catalyst Center.
-          - ap_config (dict): A dictionary containing the input configuration details.
-        Returns:
-          The method returns an instance of the class with updated attributes:
-                - self.msg: A message describing the validation result.
-                - self.status: The status of the validation (either 'success' or 'failed').
-        Description:
-            Example:
-                To use this method, create an instance of the class and call 
-                'valid_create_user_config_parameters' on it. If the validation succeeds it return 'success'.
-                If it fails, 'self.status' will be 'failed', and
-                'self.msg' will describe the validation issues.To use this method, create an
-                instance of the class and call 'valid_create_user_config_parameters' on it.
-                If the validation succeeds, this will allow to go next step, 
-                unless this will stop execution based on the fields.
-        """
-
-        errormsg = []
-
-        if user_config.get("first_name"):
-            param_spec = dict(type = "str", length_max = 255)
-            validate_str(user_config["first_name"], param_spec, "first_name",
-                            errormsg)
-
-        if user_config.get("last_name"):
-            param_spec = dict(type = "str", length_max = 255)
-            validate_str(user_config["last_name"], param_spec, "last_name",
-                            errormsg)
-
-        if user_config.get("email"):
-            email_regex = re.compile(r"[^@]+@[^@]+\.[^@]+")
-            if not email_regex.match(user_config["email"]):
-                errormsg.append("email: Invalid email format for email: '{0}'".format(user_config["email"]))
-
-        if user_config.get("username"):
-            param_spec = dict(type = "str", length_max = 255)
-            validate_str(user_config["username"], param_spec, "username",
-                            errormsg)
-
-        if user_config.get("role_list"):
-            param_spec = dict(type = "list", elements="str")
-            validate_list(user_config["role_list"], param_spec, "role_list",
-                            errormsg)
-
-        if len(errormsg) > 0:
-            self.msg = "Invalid parameters in playbook config: '{0}' "\
-                     .format(str("\n".join(errormsg)))
-            self.log(self.msg, "ERROR")
-            self.status = "failed"
-            return self
-
-        self.msg = "Successfully validated config params:{0}".format(str(user_config))
-        self.log(self.msg, "INFO")
-        self.status = "success"
-        return self
-
-
-    def valid_delete_user_config_parameters(self, user_config):
-        """
-        Addtional validation for the create user configuration payload.
-        Parameters:
-          - self (object): An instance of a class used for interacting with Cisco Catalyst Center.
-          - ap_config (dict): A dictionary containing the input configuration details.
-        Returns:
-          The method returns an instance of the class with updated attributes:
-                - self.msg: A message describing the validation result.
-                - self.status: The status of the validation (either 'success' or 'failed').
-        Description:
-            Example:
-                To use this method, create an instance of the class and call 
-                'valid_create_user_config_parameters' on it. If the validation succeeds it return 'success'.
-                If it fails, 'self.status' will be 'failed', and
-                'self.msg' will describe the validation issues.To use this method, create an
-                instance of the class and call 'valid_create_user_config_parameters' on it.
-                If the validation succeeds, this will allow to go next step, 
-                unless this will stop execution based on the fields.
-        """
-
-        errormsg = []
-
-        if user_config.get("username"):
-            param_spec = dict(type = "str", length_max = 255)
-            validate_str(user_config["username"], param_spec, "username",
-                            errormsg)
-
-        if len(errormsg) > 0:
-            self.msg = "Invalid parameters in playbook config: '{0}' "\
-                     .format(str("\n".join(errormsg)))
-            self.log(self.msg, "ERROR")
-            self.status = "failed"
-            return self
-
-        self.msg = "Successfully validated config params:{0}".format(str(user_config))
-        self.log(self.msg, "INFO")
-        self.status = "success"
-        return self
-
-
     def get_want(self, user_config):
         """
         Get all user-related information from the playbook needed for creation/updation/deletion of user in Cisco Catalyst Center.
@@ -867,6 +765,7 @@ class User(DnacBase):
             self.have["username"] = current_user_config.get("username")
             self.have["user_exists"] = user_exists
             self.have["current_user_config"] = current_user_config
+            self.have["current_role_config"] = current_role_config
         else:
             self.have["user_exists"] = user_exists
         if role_exists:
@@ -902,18 +801,12 @@ class User(DnacBase):
 
         if self.have.get("user_exists"):
             #update the user
-            self.valid_update_user_config_parameters(config).check_return_status()
-            consolidated_data = self.compare_user_cofig_with_inputdata(self.have["current_user_config"])
-            if consolidated_data:
-                self.log('Final user data to update {}'.format(str(consolidated_data)),
-                      "INFO")
-                task_response = self.update_user(consolidated_data)
-                self.log('Task respoonse {}'.format(str(task_response)),"INFO")
-                config_updated = True
-            else:
+            self.valid_user_config_parameters(config).check_return_status()
+            (consolidated_data, update_required_param) = self.user_requires_update(self.have["current_user_config"], self.have["current_role_config"])
+
+            if not consolidated_data:
                 # user does not need update
-                self.msg = "user - {0} does not need any update"\
-                    .format(self.have.get("current_user_config").get("username"))
+                self.msg = "user does not need any update"
                 self.log(self.msg, "INFO")
                 responses = {}
                 responses["users_updates"] = {"response": config}
@@ -921,9 +814,18 @@ class User(DnacBase):
                 self.result["response"].append(responses)
                 self.result["skipped"] = True
                 return self
+            user_in_have = self.have["current_user_config"]
+            update_param = update_required_param
+            update_param["user_id"] = user_in_have.get("user_id")
+            self.log('Final user data to update {}'.format(str(update_param)),
+                  "INFO")
+            task_response = self.update_user(update_param)
+            self.log('Task respoonse {}'.format(str(task_response)),"INFO")
+            config_updated = True
+
         else:
             # Create the user
-            self.valid_create_user_config_parameters(config).check_return_status()
+            self.valid_user_config_parameters(config).check_return_status()
             self.log('Creating user with config {}'.format(str(config)), "INFO")
             user_params = self.want
 
@@ -932,18 +834,14 @@ class User(DnacBase):
                 user_details = {}
 
                 for key, value in user_params.items():
-                    
                     if value is not None:
-                        
                         if key != "role_list":
                             user_details[key] = value
                         else:
                             current_role= self.have.get("current_role_config")
                             user_details[key] = []
-
                             for role_name in user_params['role_list']:
                                 role_id = current_role.get(role_name)
-
                                 if role_id:
                                     user_details[key].append(role_id)
                                 else:
@@ -954,27 +852,27 @@ class User(DnacBase):
                 user_name = user_params['username']
                 self.log("""The user '{0}' does not need additional filtering for 'None' values \
                          in the 'user_params' dictionary.""".format(user_name), "INFO")
- 
+
             task_response = self.create_user(user_params)
-            self.log('Task response {}'.format(str(task_response)), "INFO")
+            self.log('Task response {}'.format(str(dir(task_response))), "INFO")
             config_created = True
 
-        # if config_updated or config_created:
-        if config_created:
+        if config_created or config_updated:
             responses = {}
-            responses["users_updates"] = {"response": task_response}
+            responses["users_updates"] = {"response": dir(task_response)}
             
-            # if config_updated:
-            #     self.msg = "User details - {0} Updated Successfully"\
-            #         .format(self.have["current_user_config"].get("username"))
-            #     self.log(self.msg, "INFO")
-            #     self.result['msg'] = self.msg
-            #     self.result['response'].append(responses)
+            if config_updated:
+                self.msg = "User updated successfully"
+                self.log(self.msg, "INFO")
+                self.result['msg'] = self.msg
+                self.result['response'].append(responses)
 
-            self.msg = "User created successfully"
-            self.log(self.msg, "INFO")
-            self.result['msg'] = self.msg
-            self.result['response'].append(responses)
+            if config_created:
+                self.msg = "User created successfully"
+                self.log(self.msg, "INFO")
+                self.result['msg'] = self.msg
+                self.result['response'].append(responses)
+
         return self
 
 
@@ -1067,8 +965,6 @@ class User(DnacBase):
                      .format(str(input_param) + str(e)), "WARNING")
 
         if response_user and response_role:
-            self.keymap = self.keymaping(self.keymap, response_user)
-            self.keymap = self.keymaping(self.keymap, response_role)
             response_user = self.camel_to_snake_case(response_user)
             response_role = self.camel_to_snake_case(response_role)
             current_user_configuration = {}
@@ -1083,8 +979,8 @@ class User(DnacBase):
                 if user.get("username") == input_config.get("username"):
                     current_user_configuration = user
                     user_exists = True
-                    break
-            if roles:
+
+            if input_config.get("role_list") != None:
               for role in roles:
                   if role.get("name") in input_config.get("role_list"):
                       current_role_configuration[role.get("name")] = role.get("role_id")
@@ -1092,6 +988,29 @@ class User(DnacBase):
 
         return (user_exists, role_exists, current_user_configuration, current_role_configuration)
 
+    def update_user(self, user_params):
+        """
+        Update a user in Cisco Catalyst Center with the provided parameters.
+        Parameters:
+            self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+            user_params (dict): A dictionary containing user information.
+        Returns:
+            response (dict): The API response from the 'update_user' function.
+        Description:
+            This method sends a request to update a new user in Cisco Catalyst Center using the provided
+            user parameters. It logs the response and returns it.
+        """
+
+        user_info_params= self.snake_to_camel_case(user_params)
+        self.log("Update user with user_info_params: {0}".format(str(user_info_params)), "DEBUG")
+        response = self.dnac._exec(
+            family="user_and_roles",
+            function='update_user_ap_i',
+            op_modifies=True,
+            params=user_info_params,
+        )
+        self.log("Received API response from 'update_user': {0}".format(str(response)), "DEBUG")
+        return self
 
     def get_diff_deleted(self, config):
         """
@@ -1109,7 +1028,7 @@ class User(DnacBase):
         config_delete = False
 
         if self.have.get("user_exists"):
-            self.valid_delete_user_config_parameters(config).check_return_status()
+            self.valid_user_config_parameters(config).check_return_status()
             self.log('Deleting user with config {}'.format(str(config)), "INFO")
 
             # Check if the username exists in self.have
@@ -1155,41 +1074,60 @@ class User(DnacBase):
         return response
 
 
-    def keymaping(self, keymap = any, data = any):
+    def user_requires_update(self, current_user, current_role):
         """
-        This function used to create the key value by snake case and Camal Case
-        we need to pass the input as the user details this function collects
-        all key which is in Camal case and convert the key to Snake Case 
-        Snake case will be key and value will be as Camal Case return as Dict
+        Check if the user requires updates and save parameters to update.
+
         Parameters:
-          - keymap: type Dict : Already any Key map dict was available add here or empty dict.{}
-          - data: Type :Dict : Which key need do the key map use the data {}
-            eg: user details response as a input
+            current_user (dict): Dictionary containing current user information.
+            current_role (dict): Dictionary containing role mappings.
+            want (dict): Dictionary containing the desired user information.
+            update_user_param (dict): Dictionary to store parameters that need to be updated.
+
         Returns:
-            {
-                {
-                    "first_name": "firstName",
-                    "last_name": "lastName"
-                }
-            }
-        Example:
-            functions = User(module)
-            keymap = functions.keymaping(keymap,user_config)
+            bool: True if the user requires updates, False otherwise.
         """
-        if isinstance(data, dict):
-            keymap.update(keymap)
-            for key, value in data.items():
-                new_key = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', key).lower()
-                keymap[new_key] = key
-                if isinstance(value, dict):
-                    self.keymaping(keymap, value)
-                elif isinstance(value, list):
-                    self.keymaping(keymap, (item for item in value if isinstance(item, dict)))
-            return keymap
-        elif isinstance(data, list):
-            self.keymaping(keymap, (item for item in data if isinstance(item, dict)))
-        else:
-            return keymap
+
+        update_required = False
+        update_user_param = {}
+
+        if current_user.get('first_name') != self.want.get('first_name'):
+            update_user_param['first_name'] = self.want['first_name']
+            update_required = True
+        elif 'first_name' not in update_user_param:
+            update_user_param['first_name'] = current_user['first_name']
+        
+        if current_user.get('last_name') != self.want.get('last_name'):
+            update_user_param['last_name'] = self.want['last_name']
+            update_required = True
+        elif 'last_name' not in update_user_param:
+            update_user_param['last_name'] = current_user['last_name']
+        
+        if current_user.get('email') != self.want.get('email'):
+            update_user_param['email'] = self.want['email']
+            update_required = True
+        elif 'email' not in update_user_param:
+            update_user_param['email'] = current_user['email']
+        
+        if current_user.get('username') != self.want.get('username'):
+            update_user_param['username'] = self.want['username']
+            update_required = True
+        elif 'username' not in update_user_param:
+            update_user_param['username'] = current_user['username']
+        
+        # Update role_list using current_role dictionary
+        if current_user.get('role_list') != self.want.get('role_list'):
+            role_id = self.want['role_list'][0]  # Assuming 'role_list' contains only one role
+            role_name = current_role.get(role_id)
+            if role_name is not None:
+                update_user_param['role_list'] = [role_name]  # Ensure role_list is a list of strings
+            else:
+                update_user_param['role_list'] = []
+            update_required = True
+        elif 'role_list' not in update_user_param:
+            update_user_param['role_list'] = current_user.get('role_list', [])
+
+        return (update_required,update_user_param)
 
 
     def snake_to_camel_case(self, data):
