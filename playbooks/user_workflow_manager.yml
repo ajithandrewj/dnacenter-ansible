@@ -6,8 +6,8 @@
   connection: local
   gather_facts: no
   tasks:
-    - name: Get Device info and updating user details
-      cisco.dnac.user_workflow_manager:
+    - name: User and Role Workflow Manager
+      cisco.dnac.user_role_workflow_manager:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"
@@ -21,11 +21,13 @@
         dnac_api_task_timeout: 1000
         dnac_task_poll_interval: 1
         state: merged
+        # config:
+        #   - username: "ajithandrewj"
         config:
-          - first_name: "ajith"
-            last_name: "andrew"
+          - firstName: "ajith"
+            lastName: "andrew"
             email: "ajith.andrew@example.com"
             password: "Ajith@123"
             username: "ajithandrewj"
-            role_list: ["SUPER-ADMIN-ROLE"]
+            roleList: ["SUPER-ADMIN-ROLE"]
 

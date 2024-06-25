@@ -248,7 +248,7 @@ options:
     Adjust the permissions (Write, Read, or Deny) as per your specific role requirements for each parameter
 
     delete_role:
-    username:
+    rolename:
       description: The rolename in the Cisco Catalyst Center to be deleted.
       type: str
       required: true
@@ -571,6 +571,7 @@ Responce_6:
       }
 """
 
+
 import re, time
 from ansible_collections.cisco.dnac.plugins.module_utils.dnac import (
     DnacBase,
@@ -579,6 +580,7 @@ from ansible_collections.cisco.dnac.plugins.module_utils.dnac import (
     validate_list
 )
 from ansible.module_utils.basic import AnsibleModule
+
 
 class User(DnacBase):
     """Class containing member attributes for user workflow_manager module"""
@@ -589,6 +591,7 @@ class User(DnacBase):
         self.supported_states = ["merged", "deleted"]
         self.payload = module.params
         self.keymap = {}
+
 
     # Below function used to validate input over the ansible validation
     def validate_input_yml(self):
@@ -603,78 +606,216 @@ class User(DnacBase):
                 - self.msg: A message describing the validation result.
                 - self.status: The status of the validation (either 'success' or 'failed').
                 - self.validated_config: If successful, a validated version of the 'config' parameter.
-        Example:
-            To use this method, create an instance of the class and call 'validate_input_yml' on it.
-            If the validation succeeds, 'self.status' will be 'success' and 'self.validated_config'
-            will contain the validated configuration. If it fails, 'self.status' will be 'failed', and
-            'self.msg' will describe the validation issues.
-          If the validation succeeds, this will allow to go next step, unless this will stop execution.
-          based on the fields.
+        Description:
+          Example:
+              To use this method, create an instance of the class and call 'validate_input_yml' on it.
+              If the validation succeeds, 'self.status' will be 'success' and 'self.validated_config'
+              will contain the validated configuration. If it fails, 'self.status' will be 'failed', and
+              'self.msg' will describe the validation issues.
+            If the validation succeeds, this will allow to go next step, unless this will stop execution.
+            based on the fields.
         """
+
         self.log('Validating the Playbook Yaml File..', "INFO")
-        try:
-            errormsg = []
-            userlist = self.payload.get("config")
-            userlist = self.camel_to_snake_case(userlist)
-            user_details = dict(first_name = dict(required=False, type='str'),
-                        last_name = dict(required=False, type='str'),
-                        email = dict(required=False, type='str'),
-                        password = dict(required=False, type='str'),
-                        username = dict(required=False, type='str'),
-                        role_list = dict(required=False, type='list', elements='str'),
-                        )
-            valid_param, invalid_param = validate_list_of_dicts(userlist, user_details)
-            user_data = valid_param[0]
-            if len(invalid_param) > 0:
-                errormsg.append("Invalid param found in playbook: '{0}' "\
-                                .format(", ".join(invalid_param)))
-            self.log(str(user_data) + str(valid_param), "INFO")
 
-            if user_data.get("first_name"):
-                param_spec = dict(type = "str", length_max = 255)
-                validate_str(user_data["first_name"], param_spec, "first_name",
-                                errormsg)
+        if not self.config:
+            self.status = "success"
+            self.msg = "Configuration is not available in the playbook for validation"
+            self.log(self.msg, "ERROR")
+            return self
+        
+        userlist = self.payload.get("config")
+        userlist = self.camel_to_snake_case(userlist)
+        user_details = dict(first_name = dict(required=False, type='str'),
+                    last_name = dict(required=False, type='str'),
+                    email = dict(required=False, type='str'),
+                    password = dict(required=False, type='str'),
+                    username = dict(required=False, type='str'),
+                    role_list = dict(required=False, type='list', elements='str'),
+                    )
+        valid_param, invalid_param = validate_list_of_dicts(userlist, user_details)
 
-            if user_data.get("last_name"):
-                param_spec = dict(type = "str", length_max = 255)
-                validate_str(user_data["last_name"], param_spec, "last_name",
-                                errormsg)
-
-            if user_data.get("email"):
-                email_regex = re.compile(r"[^@]+@[^@]+\.[^@]+")
-                if not email_regex.match(user_data["email"]):
-                    errormsg.append("email: Invalid email format for email: '{0}'".format(user_data["email"]))
-
-            if user_data.get("password"):
-                password_regex = re.compile(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$')
-                if not password_regex.match(user_data["password"]):
-                    errormsg.append("password: Password does not meet complexity requirements for password: '{0}'".format(user_data["password"]))
-
-            if user_data.get("username"):
-                param_spec = dict(type = "str", length_max = 255)
-                validate_str(user_data["username"], param_spec, "username",
-                                errormsg)
-
-            if user_data.get("role_list"):
-                param_spec = dict(type = "list", elements="str")
-                validate_list(user_data["role_list"], param_spec, "role_list",
-                                errormsg)
-
-            if len(errormsg) > 0:
-                self.log("Invalid parameters in playbook file: '{0}' ".format(str("\n".join(errormsg))), "ERROR")
-                self.module.fail_json(msg=str("\n".join(errormsg)))
-            else:
-                self.validated_config = valid_param
-                self.msg = "Successfully validated playbook config params: {0}".format(str(valid_param))
-                self.log(self.msg, "INFO")
-                self.status = "success"
-                return self
-
-        except Exception as e:
-            self.log("Invalid Param provided in playbook Yml File. {0}".format(str(e)), "ERROR")
-            self.msg = "Invalid parameters in playbook: {0}".format(str("\n".join(errormsg)))
+        if invalid_param:
+            self.msg("Invalid param found in playbook: '{0}' "\
+                            .format(", ".join(invalid_param)))
+            self.log(self.msg, "ERROR")
             self.status = "failed"
             return self
+
+        self.validated_config = valid_param
+        self.msg = "Successfully validated playbook config params:{0}".format(str(valid_param[0]))
+        self.log(self.msg, "INFO")
+        self.status = "success"
+        return self
+
+
+    def valid_create_user_config_parameters(self, user_config):
+        """
+        Addtional validation for the create user configuration payload.
+        Parameters:
+          - self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+          - ap_config (dict): A dictionary containing the input configuration details.
+        Returns:
+          The method returns an instance of the class with updated attributes:
+                - self.msg: A message describing the validation result.
+                - self.status: The status of the validation (either 'success' or 'failed').
+        Description:
+            Example:
+                To use this method, create an instance of the class and call 
+                'valid_create_user_config_parameters' on it. If the validation succeeds it return 'success'.
+                If it fails, 'self.status' will be 'failed', and
+                'self.msg' will describe the validation issues.To use this method, create an
+                instance of the class and call 'valid_create_user_config_parameters' on it.
+                If the validation succeeds, this will allow to go next step, 
+                unless this will stop execution based on the fields.
+        """
+
+        errormsg = []
+
+        if user_config.get("first_name"):
+            param_spec = dict(type = "str", length_max = 255)
+            validate_str(user_config["first_name"], param_spec, "first_name",
+                            errormsg)
+
+        if user_config.get("last_name"):
+            param_spec = dict(type = "str", length_max = 255)
+            validate_str(user_config["last_name"], param_spec, "last_name",
+                            errormsg)
+
+        if user_config.get("email"):
+            email_regex = re.compile(r"[^@]+@[^@]+\.[^@]+")
+            if not email_regex.match(user_config["email"]):
+                errormsg.append("email: Invalid email format for email: '{0}'".format(user_config["email"]))
+
+        if user_config.get("password"):
+            password_regex = re.compile(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$')
+            if not password_regex.match(user_config["password"]):
+                errormsg.append("password: Password does not meet complexity requirements for password: '{0}'".format(user_config["password"]))
+
+        if user_config.get("username"):
+            param_spec = dict(type = "str", length_max = 255)
+            validate_str(user_config["username"], param_spec, "username",
+                            errormsg)
+
+        if user_config.get("role_list"):
+            param_spec = dict(type = "list", elements="str")
+            validate_list(user_config["role_list"], param_spec, "role_list",
+                            errormsg)
+
+        if len(errormsg) > 0:
+            self.msg = "Invalid parameters in playbook config: '{0}' "\
+                     .format(str("\n".join(errormsg)))
+            self.log(self.msg, "ERROR")
+            self.status = "failed"
+            return self
+
+        self.msg = "Successfully validated config params:{0}".format(str(user_config))
+        self.log(self.msg, "INFO")
+        self.status = "success"
+        return self
+
+
+    def valid_update_user_config_parameters(self, user_config):
+        """
+        Addtional validation for the create user configuration payload.
+        Parameters:
+          - self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+          - ap_config (dict): A dictionary containing the input configuration details.
+        Returns:
+          The method returns an instance of the class with updated attributes:
+                - self.msg: A message describing the validation result.
+                - self.status: The status of the validation (either 'success' or 'failed').
+        Description:
+            Example:
+                To use this method, create an instance of the class and call 
+                'valid_create_user_config_parameters' on it. If the validation succeeds it return 'success'.
+                If it fails, 'self.status' will be 'failed', and
+                'self.msg' will describe the validation issues.To use this method, create an
+                instance of the class and call 'valid_create_user_config_parameters' on it.
+                If the validation succeeds, this will allow to go next step, 
+                unless this will stop execution based on the fields.
+        """
+
+        errormsg = []
+
+        if user_config.get("first_name"):
+            param_spec = dict(type = "str", length_max = 255)
+            validate_str(user_config["first_name"], param_spec, "first_name",
+                            errormsg)
+
+        if user_config.get("last_name"):
+            param_spec = dict(type = "str", length_max = 255)
+            validate_str(user_config["last_name"], param_spec, "last_name",
+                            errormsg)
+
+        if user_config.get("email"):
+            email_regex = re.compile(r"[^@]+@[^@]+\.[^@]+")
+            if not email_regex.match(user_config["email"]):
+                errormsg.append("email: Invalid email format for email: '{0}'".format(user_config["email"]))
+
+        if user_config.get("username"):
+            param_spec = dict(type = "str", length_max = 255)
+            validate_str(user_config["username"], param_spec, "username",
+                            errormsg)
+
+        if user_config.get("role_list"):
+            param_spec = dict(type = "list", elements="str")
+            validate_list(user_config["role_list"], param_spec, "role_list",
+                            errormsg)
+
+        if len(errormsg) > 0:
+            self.msg = "Invalid parameters in playbook config: '{0}' "\
+                     .format(str("\n".join(errormsg)))
+            self.log(self.msg, "ERROR")
+            self.status = "failed"
+            return self
+
+        self.msg = "Successfully validated config params:{0}".format(str(user_config))
+        self.log(self.msg, "INFO")
+        self.status = "success"
+        return self
+
+
+    def valid_delete_user_config_parameters(self, user_config):
+        """
+        Addtional validation for the create user configuration payload.
+        Parameters:
+          - self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+          - ap_config (dict): A dictionary containing the input configuration details.
+        Returns:
+          The method returns an instance of the class with updated attributes:
+                - self.msg: A message describing the validation result.
+                - self.status: The status of the validation (either 'success' or 'failed').
+        Description:
+            Example:
+                To use this method, create an instance of the class and call 
+                'valid_create_user_config_parameters' on it. If the validation succeeds it return 'success'.
+                If it fails, 'self.status' will be 'failed', and
+                'self.msg' will describe the validation issues.To use this method, create an
+                instance of the class and call 'valid_create_user_config_parameters' on it.
+                If the validation succeeds, this will allow to go next step, 
+                unless this will stop execution based on the fields.
+        """
+
+        errormsg = []
+
+        if user_config.get("username"):
+            param_spec = dict(type = "str", length_max = 255)
+            validate_str(user_config["username"], param_spec, "username",
+                            errormsg)
+
+        if len(errormsg) > 0:
+            self.msg = "Invalid parameters in playbook config: '{0}' "\
+                     .format(str("\n".join(errormsg)))
+            self.log(self.msg, "ERROR")
+            self.status = "failed"
+            return self
+
+        self.msg = "Successfully validated config params:{0}".format(str(user_config))
+        self.log(self.msg, "INFO")
+        self.status = "success"
+        return self
+
 
     def get_want(self, user_config):
         """
@@ -690,10 +831,12 @@ class User(DnacBase):
             parameters such as 'username' and 'email' The gathered
             information is stored in the 'want' attribute for later reference.
         """
+        
         for key,value in user_config.items():
             self.want[key] = value
         self.log("Desired State (want): {0}".format(str(self.want)), "INFO")
         return self
+
 
     def get_have(self, input_config):
         """
@@ -732,6 +875,7 @@ class User(DnacBase):
         self.log("Current State (have): {0}".format(str(self.have)), "INFO")
         return self
 
+
     def get_diff_merged(self, config):
         """
         Update/Create user in Cisco Catalyst Center with fields
@@ -757,45 +901,54 @@ class User(DnacBase):
         # check if the given user config exists and/or needs to be updated/created.
 
         if self.have.get("user_exists"):
-            pass
-            # consolidated_data = self.compare_user_cofig_with_inputdata(self.have["current_user_config"])
-            # if consolidated_data:
-            #     self.log('Final user data to update {}'.format(str(consolidated_data)),
-            #           "INFO")
-            #     task_response = self.update_user_configuration(consolidated_data)
-            #     self.log('Task respoonse {}'.format(str(task_response)),"INFO")
-            #     config_updated = True
-            # else:
-            #     # user does not need update
-            #     self.msg = "user - {0} does not need any update"\
-            #         .format(self.have.get("current_user_config").get("username"))
-            #     self.log(self.msg, "INFO")
-            #     responses = {}
-            #     responses["users_updates"] = {"response": config}
-            #     self.result['msg'] = self.msg
-            #     self.result["response"].append(responses)
-            #     self.result["skipped"] = True
-            #     return self
+            #update the user
+            self.valid_update_user_config_parameters(config).check_return_status()
+            consolidated_data = self.compare_user_cofig_with_inputdata(self.have["current_user_config"])
+            if consolidated_data:
+                self.log('Final user data to update {}'.format(str(consolidated_data)),
+                      "INFO")
+                task_response = self.update_user(consolidated_data)
+                self.log('Task respoonse {}'.format(str(task_response)),"INFO")
+                config_updated = True
+            else:
+                # user does not need update
+                self.msg = "user - {0} does not need any update"\
+                    .format(self.have.get("current_user_config").get("username"))
+                self.log(self.msg, "INFO")
+                responses = {}
+                responses["users_updates"] = {"response": config}
+                self.result['msg'] = self.msg
+                self.result["response"].append(responses)
+                self.result["skipped"] = True
+                return self
         else:
             # Create the user
+            self.valid_create_user_config_parameters(config).check_return_status()
             self.log('Creating user with config {}'.format(str(config)), "INFO")
             user_params = self.want
+
             try:
                 # Additional filtering can be added here if necessary
                 user_details = {}
+
                 for key, value in user_params.items():
+                    
                     if value is not None:
+                        
                         if key != "role_list":
                             user_details[key] = value
                         else:
                             current_role= self.have.get("current_role_config")
                             user_details[key] = []
+
                             for role_name in user_params['role_list']:
                                 role_id = current_role.get(role_name)
+
                                 if role_id:
                                     user_details[key].append(role_id)
                                 else:
                                     self.log("Role ID for {0} not found in current_role_config".format(str(role_name)))
+
                 user_params = user_details
             except Exception as e:
                 user_name = user_params['username']
@@ -824,6 +977,7 @@ class User(DnacBase):
             self.result['response'].append(responses)
         return self
 
+
     def create_user(self, user_params):
         """
         Create a new user in Cisco Catalyst Center with the provided parameters.
@@ -846,6 +1000,7 @@ class User(DnacBase):
         )
         self.log("Received API response from 'create_user': {0}".format(str(response)), "DEBUG")
         return response
+
 
     def get_current_config(self, input_config):
         """
@@ -929,12 +1084,76 @@ class User(DnacBase):
                     current_user_configuration = user
                     user_exists = True
                     break
-            for role in roles:
-                if role.get("name") in input_config.get("role_list"):
-                    current_role_configuration[role.get("name")] = role.get("role_id")
-                    role_exists = True
+            if roles:
+              for role in roles:
+                  if role.get("name") in input_config.get("role_list"):
+                      current_role_configuration[role.get("name")] = role.get("role_id")
+                      role_exists = True
 
         return (user_exists, role_exists, current_user_configuration, current_role_configuration)
+
+
+    def get_diff_deleted(self, config):
+        """
+          Delete a user from Cisco Catalyst Center based on the provided parameters.
+          Parameters:
+             self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+              user_params (dict): A dictionary containing user information, such as 'userId' and 'username'.
+          Returns:
+              response (dict): The API response from the 'delete_user' function.
+          Description:
+              This method sends a request to delete a user in Cisco Catalyst Center using the provided
+               user parameters. It logs the response and returns it.
+        """
+
+        config_delete = False
+
+        if self.have.get("user_exists"):
+            self.valid_delete_user_config_parameters(config).check_return_status()
+            self.log('Deleting user with config {}'.format(str(config)), "INFO")
+
+            # Check if the username exists in self.have
+            current_user= self.have.get("current_user_config")
+            user_id_to_delete = {}
+            user_id_to_delete["user_id"] = current_user.get("user_id")
+            task_response = self.delete_user(user_id_to_delete)
+            self.log('Task response {}'.format(str(task_response)), "INFO")
+            config_delete = True
+
+            if config_delete:
+                responses = {}
+                responses["users_updates"] = {"response": task_response}
+                self.msg = "User deleted successfully"
+                self.log(self.msg, "INFO")
+                self.result['msg'] = self.msg
+                self.result['response'].append(responses)
+
+        return self
+
+
+    def delete_user(self, user_params):
+        """
+        Delete a user in Cisco Catalyst Center with the provided parameters.
+        Parameters:
+            self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+            user_params (dict): A dictionary containing user information.
+        Returns:
+            response (dict): The API response from the 'delete_user' function.
+        Description:
+            This method sends a request to create a new user in Cisco Catalyst Center using the provided
+            user parameters. It logs the response and returns it.
+        """
+
+        self.log("delete user with user_params: {0}".format(str(user_params)), "DEBUG")
+        response = self.dnac._exec(
+            family="user_and_roles",
+            function='delete_user_ap_i',
+            op_modifies=True,
+            params=user_params,
+        )
+        self.log("Received API response from 'delete_user': {0}".format(str(response)), "DEBUG")
+        return response
+
 
     def keymaping(self, keymap = any, data = any):
         """
@@ -955,7 +1174,7 @@ class User(DnacBase):
             }
         Example:
             functions = User(module)
-            keymap = functions.keymaping(keymap,user_data)
+            keymap = functions.keymaping(keymap,user_config)
         """
         if isinstance(data, dict):
             keymap.update(keymap)
@@ -971,6 +1190,7 @@ class User(DnacBase):
             self.keymaping(keymap, (item for item in data if isinstance(item, dict)))
         else:
             return keymap
+
 
     def snake_to_camel_case(self, data):
             """
@@ -990,17 +1210,20 @@ class User(DnacBase):
                 camel_case_data = {}
                 for key, value in data.items():
                     new_key = to_camel_case(key)
+
                     if isinstance(value, dict):
                         camel_case_data[new_key] = self.snake_to_camel_case(value)
                     elif isinstance(value, list):
                         camel_case_data[new_key] = [self.snake_to_camel_case(item) if isinstance(item, dict) else item for item in value]
                     else:
                         camel_case_data[new_key] = value
+
                 return camel_case_data
             elif isinstance(data, list):
                 return [self.snake_to_camel_case(item) if isinstance(item, dict) else item for item in data]
             else:
                 return data
+
 
 def main():
     """ main entry point for module execution
@@ -1046,7 +1269,9 @@ def main():
         ccc_user.get_want(config).check_return_status()
         ccc_user.get_have(config).check_return_status()
         ccc_user.get_diff_state_apply[state](config).check_return_status()
+        
         # if config_verify:
+        #     time.sleep(5)
         #     ccc_user.verify_diff_state_apply[state](config).check_return_status()
 
     module.exit_json(**ccc_user.result)
