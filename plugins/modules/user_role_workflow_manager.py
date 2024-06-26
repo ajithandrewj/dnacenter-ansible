@@ -494,30 +494,6 @@ class User(DnacBase):
         return self
 
 
-    def create_user(self, user_params):
-        """
-        Create a new user in Cisco Catalyst Center with the provided parameters.
-        Parameters:
-            self (object): An instance of a class used for interacting with Cisco Catalyst Center.
-            user_params (dict): A dictionary containing user information.
-        Returns:
-            response (dict): The API response from the 'create_user' function.
-        Description:
-            This method sends a request to create a new user in Cisco Catalyst Center using the provided
-            user parameters. It logs the response and returns it.
-        """
-        user_info_params= self.snake_to_camel_case(user_params)
-        self.log("Create user with user_info_params: {0}".format(str(user_info_params)), "DEBUG")
-        response = self.dnac._exec(
-            family="user_and_roles",
-            function='add_user_ap_i',
-            op_modifies=True,
-            params=user_info_params,
-        )
-        self.log("Received API response from 'create_user': {0}".format(str(response)), "DEBUG")
-        return response
-
-
     def get_current_config(self, input_config):
         """
         Check if the input user details exist in Cisco Catalyst Center.
@@ -527,17 +503,7 @@ class User(DnacBase):
 
         Returns:
             A Dictionary list containing user details based on the input given from
-            playbook like username
-            [
-                {
-                    "first_name": "Ajith",
-                    "last_name": "Andrew",
-                    "email": "ajith.andrew@example.com",
-                    "password": "Ajith@123",
-                    "username": "ajithandrewj",
-                    "role_list": ["SUPER-ADMIN-ROLE"]
-                }
-            ]
+            playbook
 
         Description:
             Checks the existence of a user and gets the user details in Cisco Catalyst Center
@@ -605,6 +571,82 @@ class User(DnacBase):
                       role_exists = True
 
         return (user_exists, role_exists, current_user_configuration, current_role_configuration)
+
+
+    def create_user(self, user_params):
+        """
+        Create a new user in Cisco Catalyst Center with the provided parameters.
+        Parameters:
+            self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+            user_params (dict): A dictionary containing user information.
+        Returns:
+            response (dict): The API response from the 'create_user' function.
+        Description:
+            This method sends a request to create a new user in Cisco Catalyst Center using the provided
+            user parameters. It logs the response and returns it.
+        """
+        user_info_params= self.snake_to_camel_case(user_params)
+        self.log("Create user with user_info_params: {0}".format(str(user_info_params)), "DEBUG")
+        response = self.dnac._exec(
+            family="user_and_roles",
+            function='add_user_ap_i',
+            op_modifies=True,
+            params=user_info_params,
+        )
+        self.log("Received API response from 'create_user': {0}".format(str(response)), "DEBUG")
+        return response
+    
+
+    def user_requires_update(self, current_user, current_role):
+        """
+        Check if the user requires updates and save parameters to update.
+
+        Parameters:
+            current_user (dict): Dictionary containing current user information.
+            current_role (dict): Dictionary containing role mappings.
+            want (dict): Dictionary containing the desired user information.
+            update_user_param (dict): Dictionary to store parameters that need to be updated.
+
+        Returns:
+            bool: True if the user requires updates, False otherwise.
+        """
+
+        update_required = False
+        update_user_param = {}
+
+        if current_user.get('first_name') != self.want.get('first_name'):
+            update_user_param['first_name'] = self.want['first_name']
+            update_required = True
+        elif 'first_name' not in update_user_param:
+            update_user_param['first_name'] = current_user['first_name']
+        
+        if current_user.get('last_name') != self.want.get('last_name'):
+            update_user_param['last_name'] = self.want['last_name']
+            update_required = True
+        elif 'last_name' not in update_user_param:
+            update_user_param['last_name'] = current_user['last_name']
+        
+        if current_user.get('email') != self.want.get('email'):
+            update_user_param['email'] = self.want['email']
+            update_required = True
+        elif 'email' not in update_user_param:
+            update_user_param['email'] = current_user['email']
+        
+        if current_user.get('username') != self.want.get('username'):
+            update_user_param['username'] = self.want['username']
+            update_required = True
+        elif 'username' not in update_user_param:
+            update_user_param['username'] = current_user['username']
+        
+        if current_user.get('role_list')[0] != current_role[self.want.get("role_list")[0]]:
+            role_id = current_role[self.want.get("role_list")[0]]
+            update_user_param['role_list'] = [role_id]
+            update_required = True
+        elif 'role_list' not in update_user_param:
+            update_user_param['role_list'] = [current_role[self.want.get("role_list")[0]]]
+
+        return (update_required,update_user_param)
+
 
     def update_user(self, user_params):
         """
@@ -692,56 +734,77 @@ class User(DnacBase):
         return response
 
 
-    def user_requires_update(self, current_user, current_role):
+    def verify_diff_merged(self, config):
         """
-        Check if the user requires updates and save parameters to update.
-
-        Parameters:
-            current_user (dict): Dictionary containing current user information.
-            current_role (dict): Dictionary containing role mappings.
-            want (dict): Dictionary containing the desired user information.
-            update_user_param (dict): Dictionary to store parameters that need to be updated.
-
-        Returns:
-            bool: True if the user requires updates, False otherwise.
+        Verify the merged status(Creation/Updation) of user details in Cisco Catalyst Center.
+        Args:
+            - self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+            - config (dict): The configuration details to be verified.
+        Return:
+            - self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+        Description:
+            This method checks the merged status of a configuration in Cisco Catalyst Center by retrieving the current state
+            (have) and desired state (want) of the configuration, logs the states, and validates whether the specified
+            user exists in the Catalyst Center configuration.
         """
 
-        update_required = False
-        update_user_param = {}
+        self.get_have(config)
+        self.log("Current State (have): {0}".format(str(self.have)), "INFO")
+        self.log("Desired State (want): {0}".format(str(self.want)), "INFO")
 
-        if current_user.get('first_name') != self.want.get('first_name'):
-            update_user_param['first_name'] = self.want['first_name']
-            update_required = True
-        elif 'first_name' not in update_user_param:
-            update_user_param['first_name'] = current_user['first_name']
-        
-        if current_user.get('last_name') != self.want.get('last_name'):
-            update_user_param['last_name'] = self.want['last_name']
-            update_required = True
-        elif 'last_name' not in update_user_param:
-            update_user_param['last_name'] = current_user['last_name']
-        
-        if current_user.get('email') != self.want.get('email'):
-            update_user_param['email'] = self.want['email']
-            update_required = True
-        elif 'email' not in update_user_param:
-            update_user_param['email'] = current_user['email']
-        
-        if current_user.get('username') != self.want.get('username'):
-            update_user_param['username'] = self.want['username']
-            update_required = True
-        elif 'username' not in update_user_param:
-            update_user_param['username'] = current_user['username']
-        
-        if current_user.get('role_list')[0] != current_role[self.want.get("role_list")[0]]:
-            role_id = current_role[self.want.get("role_list")[0]]
-            update_user_param['role_list'] = [role_id]
-            update_required = True
-        elif 'role_list' not in update_user_param:
-            update_user_param['role_list'] = [current_role[self.want.get("role_list")[0]]]
+        # Code to validate ccc config for merged state
+        user_exist = self.have.get("user_exists")
+        user_name = self.want.get("username")
 
-        return (update_required,update_user_param)
+        if user_exist:
+            self.status = "success"
+            self.msg = "The requested user '{0}' is present in the Cisco Catalyst Center and its creation has been verified.".format(user_name)
+            self.log(self.msg, "INFO")
 
+        (require_update, updated_user_info) = self.user_requires_update(self.have["current_user_config"], self.have["current_role_config"])
+
+        if not require_update:
+            self.log("The update for user '{0}' has been successfully verified. The updated info - {1}".format(user_name, updated_user_info), "INFO")
+            self. status = "success"
+            return self
+
+        self.log("""The playbook input for user '{0}' does not align with the Cisco Catalyst Center, indicating that the merge task
+                 may not have executed successfully.""".format(user_name), "INFO")
+
+        return self
+
+
+    def verify_diff_deleted(self, config):
+        """
+        Verify the deletion status of user detail in Cisco Catalyst Center.
+        Args:
+            - self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+            - config (dict): The configuration details to be verified.
+        Return:
+            - self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+        Description:
+            This method checks the deletion status of a configuration in Cisco Catalyst Center.
+            It validates whether the specified site exists in the Catalyst Center configuration.
+        """
+
+        self.get_have(config)
+        self.log("Current State (have): {0}".format(str(self.have)), "INFO")
+        self.log("Desired State (want): {0}".format(str(self.want)), "INFO")
+
+        # Code to validate ccc config for delete state
+        user_exist = self.have.get("user_exists")
+
+        if not user_exist:
+            self.status = "success"
+            msg = """The requested user '{0}' has already been deleted from the Cisco Catalyst Center and this has been
+                successfully verified.""".format(str(self.want.get("username")))
+            self.log(msg, "INFO")
+            return self
+        self.log("""Mismatch between the playbook input for site '{0}' and the Cisco Catalyst Center indicates that
+                 the deletion was not executed successfully.""".format(str(self.want.get("username"))), "INFO")
+
+        return self
+    
 
     def snake_to_camel_case(self, data):
             """
@@ -821,9 +884,9 @@ def main():
         ccc_user.get_have(config).check_return_status()
         ccc_user.get_diff_state_apply[state](config).check_return_status()
         
-        # if config_verify:
-        #     time.sleep(5)
-        #     ccc_user.verify_diff_state_apply[state](config).check_return_status()
+        if config_verify:
+            time.sleep(5)
+            ccc_user.verify_diff_state_apply[state](config).check_return_status()
 
     module.exit_json(**ccc_user.result)
 

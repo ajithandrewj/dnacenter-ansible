@@ -20,11 +20,11 @@
         config_verify: True
         dnac_api_task_timeout: 1000
         dnac_task_poll_interval: 1    
-        state: deleted
+        state: merged
         config:
           - first_name: "ajith"
             last_name: "andrew"
-            username: "ajithandrewj"             # Should not be empty
+            username: "ajithandrewj"
             email: "ajith.andrew@example.com"
-            password: "Ajith@123"                # For creation it should not be empty
-            role_list: ["SUPER-ADMIN-ROLE"]      # Should not be empty
+            password: "Ajith@123"
+            role_list: ["SUPER-ADMIN-ROLE"]
