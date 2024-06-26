@@ -1,11 +1,14 @@
 config:
-   create_new_custom_role:
-    - Assurance: "Deny/Read/Write"
-      Network_Analytics: "Deny/Read/Write"
-      Network_Design: "Deny/Read/Write"
-      Network_Provision: "Deny/Read/Write"
-      Network_Services: "Deny/Read/Write"
-      Platform: "Deny/Read/Write"
-      Security: "Deny/Read/Write"
-      System: "Deny/Read/Write"
-      Utilities: "Deny/Read/Write"
+  create_new_custom_role:
+    - role_name: "role_name"
+      description: "role_description"
+      assurance: "deny/read/write"
+      network_analytics: "deny/read/write"
+      network_design: "deny/read/write"
+      network_provision: "deny/read/write"
+      network_services: "deny/read/write"
+      platform: "deny/read/write"
+      security: "deny/read/write"
+      system: "deny/read/write"
+      utilities: "deny/read/write"
+

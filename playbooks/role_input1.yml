@@ -1,51 +1,53 @@
 config:
-   create_new_custom_role:
-    - Assurance:
-       - Monitoring_and_Troubleshooting: "Deny/Read/Write"
-         Monitoring_Settings: "Deny/Read/Write"
-         Troubleshooting_Tools: "Deny/Read/Write"
-    - Network_Analytics:
-       - Data_Access: "Deny/Read/Write"
-    - Network_Design:
-       - Advanced_Network_Settings: "Deny/Read/Write"
-         Image_Repository: "Deny/Read/Write"
-         Network_Hierarchy: "Deny/Read/Write"
-         Network_Profiles: "Deny/Read/Write"
-         Network_Settings: "Deny/Read/Write"
-         Virtual_Network: "Deny/Read/Write"
-    - Network_Provision:
-       - Compliance: "Deny/Read/Write"
-         Image_Update: "Deny/Read/Write"
-         Inventory_Management:
-           - Device_Configuration: "Deny/Read/Write"
-             Discovery: "Deny/Read/Write"
-             Network_Device: "Deny/Read/Write"
-             Port_Management: "Deny/Read/Write"
-             Topology: "Deny/Read/Write"
-         License: "Deny/Read/Write"
-         Network_Telemetry: "Deny/Read/Write"
-         PnP: "Deny/Read/Write"
-         Provision: "Deny/Read/Write"
-    - Network_Services:
-       - App_Hosting: "Deny/Read/Write"
-         Bonjour: "Deny/Read/Write"
-         Stealthwatch: "Deny/Read/Write"
-         Umbrella: "Deny/Read/Write"
-    - Platform:
-       - APIs: "Deny/Read/Write"
-         Bundles: "Deny/Read/Write"
-         Events: "Deny/Read/Write"
-         Reports: "Deny/Read/Write"
-    - Security:
-       - Group_Based_Policy: "Deny/Read/Write"
-         IP_Based_Access_Control: "Deny/Read/Write"
-         Security_Advisories: "Deny/Read/Write"
-    - System:
-       - Machine_Reasoning: "Deny/Read/Write"
-         System_Management: "Deny/Read/Write"
-    - Utilities:
-       - Audit_Log: "Deny/Read/Write"
-         Event_Viewer: "Deny/Read/Write"
-         Network_Reasoner: "Deny/Read/Write"
-         Scheduler: "Deny/Read/Write"
-         Search: "Deny/Read/Write"
+  role_based_access_control:
+    - role_name: "role_name"
+      description: "role_description"
+      assurance:
+        - monitoring_and_troubleshooting: "deny/read/write"
+        - monitoring_settings: "deny/read/write"
+        - troubleshooting_tools: "deny/read/write"
+      network_analytics:
+        - data_access: "deny/read/write"
+      network_design:
+        - advanced_network_settings: "deny/read/write"
+        - image_repository: "deny/read/write"
+        - network_hierarchy: "deny/read/write"
+        - network_profiles: "deny/read/write"
+        - network_settings: "deny/read/write"
+        - virtual_network: "deny/read/write"
+      network_provision:
+        - compliance: "deny/read/write"
+        - image_update: "deny/read/write"
+        - inventory_management:
+            - device_configuration: "deny/read/write"
+            - discovery: "deny/read/write"
+            - network_device: "deny/read/write"
+            - port_management: "deny/read/write"
+            - topology: "deny/read/write"
+        - license: "deny/read/write"
+        - network_telemetry: "deny/read/write"
+        - pnp: "deny/read/write"
+        - provision: "deny/read/write"
+      network_services:
+        - app_hosting: "deny/read/write"
+        - bonjour: "deny/read/write"
+        - stealthwatch: "deny/read/write"
+        - umbrella: "deny/read/write"
+      platform:
+        - apis: "deny/read/write"
+        - bundles: "deny/read/write"
+        - events: "deny/read/write"
+        - reports: "deny/read/write"
+      security:
+        - group_based_policy: "deny/read/write"
+        - ip_based_access_control: "deny/read/write"
+        - security_advisories: "deny/read/write"
+      system:
+        - machine_reasoning: "deny/read/write"
+        - system_management: "deny/read/write"
+      utilities:
+        - audit_log: "deny/read/write"
+        - event_viewer: "deny/read/write"
+        - network_reasoner: "deny/read/write"
+        - scheduler: "deny/read/write"
+        - search: "deny/read/write"
