@@ -21,10 +21,19 @@
         dnac_api_task_timeout: 1000
         dnac_task_poll_interval: 1    
         state: merged
+        # config:
+        #   user_details:
+        #    - first_name: "ajith"
+        #      last_name: "andrew"
+        #      username: "ajithandrewj"
+        #      email: "ajith.andrew@example.com"
+        #      password: "Ajith@123"
+        #      role_list: ["SUPER-ADMIN-ROLE"]
         config:
-          - first_name: "ajith"
-            last_name: "andrew"
-            username: "ajithandrewj"
-            email: "ajith.andrew@example.com"
-            password: "Ajith@123"
-            role_list: ["SUPER-ADMIN-ROLE"]
+          role_details:
+            - rolename: "Test_Role_1"
+              description: "Role_description"
+              assurance:
+                - monitoring_and_troubleshooting: "read"
+                  # monitoring_settings: "deny"
+                  troubleshooting_tools: "write"
