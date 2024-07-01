@@ -21,19 +21,63 @@
         dnac_api_task_timeout: 1000
         dnac_task_poll_interval: 1    
         state: merged
-        # config:
-        #   user_details:
-        #    - first_name: "ajith"
-        #      last_name: "andrew"
-        #      username: "ajithandrewj"
-        #      email: "ajith.andrew@example.com"
-        #      password: "Ajith@123"
-        #      role_list: ["SUPER-ADMIN-ROLE"]
         config:
           role_details:
-            - rolename: "Test_Role_1"
+            - role_name: "Test_Role_1"
               description: "Role_description"
               assurance:
                 - monitoring_and_troubleshooting: "read"
-                  # monitoring_settings: "deny"
-                  troubleshooting_tools: "write"
+                  monitoring_settings: "deny"
+                  troubleshooting_tools: "read"
+              network_analytics:
+                data_access: "write"
+              network_design:
+                - advanced_network_settings: "write"
+                  image_repository: "deny"
+                  network_hierarchy: "read"
+                  network_profiles: "deny"
+                  network_settings: "write"
+                  virtual_network: "read"
+              network_provision:
+                - compliance: "deny"
+                  image_update: "write"
+                  inventory_management:
+                    - device_configuration: "write"
+                      discovery: "read"
+                      network_device: "write"
+                      port_management: "deny"
+                      topology: "deny"
+                  license: "write"
+                  network_telemetry: "read"
+                  pnp: "deny"
+                  provision: "write"
+              network_services:
+                - app_hosting: "write"
+                  bonjour: "deny"
+                  stealthwatch: "read"
+                  umbrella: "write"
+              platform:
+                - apis: "write"
+                  bundles: "write"
+                  events: "write"
+                  reports: "write"
+              security:
+                - group_based_policy: "read"
+                  ip_based_access_control: "read"
+                  security_advisories: "read"
+              system:
+                - machine_reasoning: "deny"
+                  system_management: "read"
+              utilities:
+                - audit_log: "write"
+                  event_viewer: "deny"
+                  network_reasoner: "read"
+                  scheduler: "read"
+                  search: "write"
+          user_details:
+           - first_name: "ajith"
+             last_name: "andrew"
+             username: "ajithandrewj"
+             email: "ajith.andrew@example.com"
+             password: "Ajith@123"
+             role_list: ["SUPER-ADMIN-ROLE"]

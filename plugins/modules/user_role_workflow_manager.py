@@ -18,7 +18,7 @@ description:
   - API to create user and role
   - API to update user and role
   - API to delete user and role
-version_added: '6.7.0'
+version_added: '6.17.0'
 extends_documentation_fragment:
   - cisco.dnac.workflow_manager_params
 author: Ajith Andrew J (@ajithandrewj)
@@ -782,19 +782,20 @@ class User(DnacBase):
         
         if 'role_details' in self.payload.get("config"):
             rolelist = self.payload.get("config").get("role_details")
+            self.log(rolelist)
             rolelist = self.camel_to_snake_case(rolelist)
-            role_details = dict(rolename = dict(required = False, type = 'str'),
-                        description = dict(required = False, type = 'str'),
-                        assurance = dict(required = False, type = 'list', elements='dict'),
-                        network_analytics = dict(required = False, type = 'dict'),
-                        network_design = dict(required = False, type = 'list', elements='dict'),
-                        network_provision = dict(required = False, type = 'list', elements='dict'),
-                        network_services = dict(required = False, type = 'list', elements='dict'),
-                        platform = dict(required = False, type = 'list', elements='dict'),
-                        security = dict(required = False, type = 'list', elements='dict'),
-                        system = dict(required = False, type = 'list', elements='dict'),
-                        utilities = dict(required = False, type = 'list', elements='dict'),
-                        )
+            role_details = dict(role_name=dict(required=True, type='str'),
+                                description=dict(required=False, type='str'),
+                                assurance=dict(required=False, type="list", elements="dict"),
+                                network_analytics=dict(required=False, type='dict'),
+                                network_design=dict(required=False, type='list', elements='dict'),
+                                network_provision=dict(required=False, type='list', elements='dict'),
+                                network_services=dict(required=False, type='list', elements='dict'),
+                                platform=dict(required=False, type='list', elements='dict'),
+                                security=dict(required=False, type='list', elements='dict'),
+                                system=dict(required=False, type='list', elements='dict'),
+                                utilities=dict(required=False, type='list', elements='dict')
+                                )
             valid_param, invalid_param = validate_list_of_dicts(rolelist, role_details)
 
             if invalid_param:
@@ -814,12 +815,12 @@ class User(DnacBase):
             userlist = self.payload.get("config").get("user_details")
             userlist = self.camel_to_snake_case(userlist)
             user_details = dict(first_name = dict(required = False, type = 'str'),
-                        last_name = dict(required = False, type = 'str'),
-                        email = dict(required = False, type = 'str'),
-                        password = dict(required = False, type = 'str'),
-                        username = dict(required = False, type = 'str'),
-                        role_list = dict(required = False, type = 'list', elements='str'),
-                        )
+                                last_name = dict(required = False, type = 'str'),
+                                email = dict(required = False, type = 'str'),
+                                password = dict(required = False, type = 'str'),
+                                username = dict(required = False, type = 'str'),
+                                role_list = dict(required = False, type = 'list', elements='str'),
+                                )
             valid_param, invalid_param = validate_list_of_dicts(userlist, user_details)
 
             if invalid_param:
@@ -836,6 +837,235 @@ class User(DnacBase):
             return self
 
 
+    def valid_role_config_parameters(self, role_config):
+        """
+        Addtional validation for the create user configuration payload.
+        Parameters:
+          - self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+          - ap_config (dict): A dictionary containing the input configuration details.
+        Returns:
+          The method returns an instance of the class with updated attributes:
+                - self.msg: A message describing the validation result.
+                - self.status: The status of the validation (either 'success' or 'failed').
+        Description:
+            Example:
+                To use this method, create an instance of the class and call 
+                'valid_role_config_parameters' on it. If the validation succeeds it return 'success'.
+                If it fails, 'self.status' will be 'failed', and
+                'self.msg' will describe the validation issues.To use this method, create an
+                instance of the class and call 'valid_role_config_parameters' on it.
+                If the validation succeeds, this will allow to go next step, 
+                unless this will stop execution based on the fields.
+        """
+
+        errormsg = []
+
+        if role_config.get("role_name"):
+            param_spec = dict(type="str", length_max=255)
+            validate_str(role_config["role_name"], param_spec, "role_name", errormsg)
+
+        if role_config.get("description"):
+            param_spec = dict(type="str", length_max=255)
+            validate_str(role_config["description"], param_spec, "description", errormsg)
+
+        assurance_list = role_config.get("assurance", [])
+        if assurance_list:
+            for assurance_dict in assurance_list:
+                if assurance_dict.get("monitoring_and_troubleshooting"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(assurance_dict["monitoring_and_troubleshooting"], param_spec, "monitoring_and_troubleshooting", errormsg)
+
+                if assurance_dict.get("monitoring_settings"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(assurance_dict["monitoring_settings"], param_spec, "monitoring_settings", errormsg)
+
+                if assurance_dict.get("troubleshooting_tools"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(assurance_dict["troubleshooting_tools"], param_spec, "troubleshooting_tools", errormsg) 
+
+        network_analytics_dict = role_config.get("network_analytics", {})
+        if network_analytics_dict:
+            if network_analytics_dict.get("data_access"):
+                param_spec = dict(type="str", length_max=255)
+                validate_str(network_analytics_dict["data_access"], param_spec, "data_access", errormsg)
+
+        network_design_list = role_config.get("network_design", [])
+        if network_design_list:
+            for network_design_dict in network_design_list:
+                if network_design_dict.get("advanced_network_settings"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_design_dict["advanced_network_settings"], param_spec, "advanced_network_settings", errormsg)
+
+                if network_design_dict.get("image_repository"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_design_dict["image_repository"], param_spec, "image_repository", errormsg)
+
+                if network_design_dict.get("network_hierarchy"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_design_dict["network_hierarchy"], param_spec, "network_hierarchy", errormsg)
+
+                if network_design_dict.get("network_profiles"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_design_dict["network_profiles"], param_spec, "network_profiles", errormsg)
+
+                if network_design_dict.get("network_settings"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_design_dict["network_settings"], param_spec, "network_settings", errormsg)
+
+                if network_design_dict.get("virtual_network"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_design_dict["virtual_network"], param_spec, "virtual_network", errormsg)
+
+        network_provision_list = role_config.get("network_provision", [])
+        if network_provision_list:
+            for network_provision_dict in network_provision_list:
+                if network_provision_dict.get("compliance"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_provision_dict["compliance"], param_spec, "compliance", errormsg)
+
+                if network_provision_dict.get("image_update"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_provision_dict["image_update"], param_spec, "image_update", errormsg)
+
+                if network_provision_dict.get("inventory_management"):
+                    inventory_management_list = network_provision_dict.get("inventory_management", [])
+                    for inventory_management_dict in inventory_management_list:
+                        if inventory_management_dict.get("device_configuration"):
+                            param_spec = dict(type="str", length_max=255)
+                            validate_str(inventory_management_dict["device_configuration"], param_spec, "device_configuration", errormsg)
+
+                        if inventory_management_dict.get("discovery"):
+                            param_spec = dict(type="str", length_max=255)
+                            validate_str(inventory_management_dict["discovery"], param_spec, "discovery", errormsg)
+
+                        if inventory_management_dict.get("network_device"):
+                            param_spec = dict(type="str", length_max=255)
+                            validate_str(inventory_management_dict["network_device"], param_spec, "network_device", errormsg)
+
+                        if inventory_management_dict.get("port_management"):
+                            param_spec = dict(type="str", length_max=255)
+                            validate_str(inventory_management_dict["port_management"], param_spec, "port_management", errormsg)
+
+                        if inventory_management_dict.get("topology"):
+                            param_spec = dict(type="str", length_max=255)
+                            validate_str(inventory_management_dict["topology"], param_spec, "topology", errormsg)
+
+                if network_provision_dict.get("license"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_provision_dict["license"], param_spec, "license", errormsg)
+
+                if network_provision_dict.get("network_telemetry"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_provision_dict["network_telemetry"], param_spec, "network_telemetry", errormsg)
+
+                if network_provision_dict.get("pnp"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_provision_dict["pnp"], param_spec, "pnp", errormsg)
+
+                if network_provision_dict.get("provision"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_provision_dict["provision"], param_spec, "provision", errormsg)
+
+        network_services_list = role_config.get("network_services", [])
+        if network_services_list:
+            for network_services_dict in network_services_list:
+                if network_services_dict.get("app_hosting"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_services_dict["app_hosting"], param_spec, "app_hosting", errormsg)
+
+                if network_services_dict.get("bonjour"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_services_dict["bonjour"], param_spec, "bonjour", errormsg)
+
+                if network_services_dict.get("stealthwatch"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_services_dict["stealthwatch"], param_spec, "stealthwatch", errormsg)
+
+                if network_services_dict.get("umbrella"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(network_services_dict["umbrella"], param_spec, "umbrella", errormsg)
+
+        platform_list = role_config.get("platform", [])
+        if platform_list:
+            for platform_dict in platform_list:
+                if platform_dict.get("apis"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(platform_dict["apis"], param_spec, "apis", errormsg)
+
+                if platform_dict.get("bundles"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(platform_dict["bundles"], param_spec, "bundles", errormsg)
+
+                if platform_dict.get("events"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(platform_dict["events"], param_spec, "events", errormsg)
+
+                if platform_dict.get("reports"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(platform_dict["reports"], param_spec, "reports", errormsg)
+
+        security_list = role_config.get("security", [])
+        if security_list:
+            for security_dict in security_list:
+                if security_dict.get("group_based_policy"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(security_dict["group_based_policy"], param_spec, "group_based_policy", errormsg)
+
+                if security_dict.get("ip_based_access_control"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(security_dict["ip_based_access_control"], param_spec, "ip_based_access_control", errormsg)
+
+                if security_dict.get("security_advisories"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(security_dict["security_advisories"], param_spec, "security_advisories", errormsg)
+
+        system_list = role_config.get("system", [])
+        if system_list:
+            for system_dict in system_list:
+                if system_dict.get("machine_reasoning"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(system_dict["machine_reasoning"], param_spec, "machine_reasoning", errormsg)
+
+                if system_dict.get("system_management"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(system_dict["system_management"], param_spec, "system_management", errormsg)
+
+        utilities_list = role_config.get("utilities", [])
+        if utilities_list:
+            for utilities_dict in utilities_list:
+                if utilities_dict.get("audit_log"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(utilities_dict["audit_log"], param_spec, "audit_log", errormsg)
+
+                if utilities_dict.get("event_viewer"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(utilities_dict["event_viewer"], param_spec, "event_viewer", errormsg)
+
+                if utilities_dict.get("network_reasoner"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(utilities_dict["network_reasoner"], param_spec, "network_reasoner", errormsg)
+
+                if utilities_dict.get("scheduler"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(utilities_dict["scheduler"], param_spec, "scheduler", errormsg)
+
+                if utilities_dict.get("search"):
+                    param_spec = dict(type="str", length_max=255)
+                    validate_str(utilities_dict["search"], param_spec, "search", errormsg)
+
+        if len(errormsg) > 0:
+            self.msg = "Invalid parameters in playbook config: '{0}' "\
+                     .format(str("\n".join(errormsg)))
+            self.log(self.msg, "ERROR")
+            self.status = "failed"
+            return self
+
+        self.msg = "Successfully validated config params:{0}".format(str(role_config))
+        self.log(self.msg, "INFO")
+        self.status = "success"
+        return self
+    
+
     def valid_user_config_parameters(self, user_config):
         """
         Addtional validation for the create user configuration payload.
@@ -849,10 +1079,10 @@ class User(DnacBase):
         Description:
             Example:
                 To use this method, create an instance of the class and call 
-                'valid_create_user_config_parameters' on it. If the validation succeeds it return 'success'.
+                'valid_user_config_parameters' on it. If the validation succeeds it return 'success'.
                 If it fails, 'self.status' will be 'failed', and
                 'self.msg' will describe the validation issues.To use this method, create an
-                instance of the class and call 'valid_create_user_config_parameters' on it.
+                instance of the class and call 'valid_user_config_parameters' on it.
                 If the validation succeeds, this will allow to go next step, 
                 unless this will stop execution based on the fields.
         """
@@ -902,8 +1132,7 @@ class User(DnacBase):
         return self
 
 
-    def get_want(self, user_config):
-        self.log(user_config)
+    def get_want(self, config):
         """
         Get all user-related information from the playbook needed for creation/updation/deletion of user in Cisco Catalyst Center.
         Parameters:
@@ -917,9 +1146,11 @@ class User(DnacBase):
             parameters such as 'username' and 'email' The gathered
             information is stored in the 'want' attribute for later reference.
         """
-        
-        for key,value in user_config.items():
-            self.want[key] = value
+        want = {}
+        for key,value in config.items():
+              want[key] = value
+
+        self.want = want
         self.log("Desired State (want): {0}".format(str(self.want)), "INFO")
         return self
 
@@ -938,34 +1169,55 @@ class User(DnacBase):
             user, including the user ID and other relevant information. The
             results are stored in the 'have' attribute for later reference.
         """
+
         user_exists = False
         role_exists = False
         current_user_config = None
         current_role_config = None
-        # check if given user config exists, if exists store current user info
-        (user_exists, role_exists, current_user_config, current_role_config) = self.get_current_config(input_config)
+        current_role_id_config = None
+        have = {}
 
-        if not user_exists:
-            self.log("The provided user '{0}' is not present in the Cisco Catalyst Center. User_exists = {1}".format(str(input_config.get("username")), str(user_exists)), "INFO")
-        self.log("Current user config details (have): {0}".format(str(current_user_config)), "DEBUG")
+        if "role_name" in input_config and input_config["role_name"] is not None:
+            (role_exists, current_role_config, current_role_id_config) = self.get_current_config(input_config)
 
-        if user_exists:
-            self.have["username"] = current_user_config.get("username")
-            self.have["user_exists"] = user_exists
-            self.have["current_user_config"] = current_user_config
-            self.have["current_role_config"] = current_role_config
-        else:
-            self.have["user_exists"] = user_exists
-        if role_exists:
-            self.have["current_role_config"] = current_role_config
+            if not role_exists:
+                self.log("The provided role '{0}' is not present in the Cisco Catalyst Center. Role_exists = {1}".format(str(input_config.get("role_name")), str(role_exists)), "INFO")
+            self.log("Current role config details (have): {0}".format(str(current_role_config)), "DEBUG")
 
+            if role_exists:
+                have["role_name"] = current_role_config.get("name")
+                have["role_exists"] = role_exists
+                have["current_role_config"] = current_role_config
+                have["current_role_id_config"] = current_role_id_config
+            else:
+                have["role_exists"] = role_exists
+        
+        elif input_config["username"] is not None or input_config["email"] is not None:
+            (user_exists, role_exists, current_user_config, current_role_id_config) = self.get_current_config(input_config)
+
+            if not user_exists:
+                self.log("The provided user '{0}' is not present in the Cisco Catalyst Center. User_exists = {1}".format(str(input_config.get("username")), str(user_exists)), "INFO")
+            self.log("Current user config details (have): {0}".format(str(current_user_config)), "DEBUG")
+
+            if user_exists:
+                have["username"] = current_user_config.get("username")
+                have["user_exists"] = user_exists
+                have["current_user_config"] = current_user_config
+                have["current_role_id_config"] = current_role_id_config
+            else:
+                have["user_exists"] = user_exists
+                
+            if role_exists:
+                have["current_role_id_config"] = current_role_id_config
+
+        self.have = have
         self.log("Current State (have): {0}".format(str(self.have)), "INFO")
         return self
 
 
     def get_diff_merged(self, config):
         """
-        Update/Create user in Cisco Catalyst Center with fields
+        Update/Create user or role in Cisco Catalyst Center with fields
         provided in the playbook.
         Parameters:
           self (object): An instance of a class used for interacting with Cisco Catalyst Center.
@@ -975,50 +1227,104 @@ class User(DnacBase):
         Description:
             This method determines whether to update or create user details in Cisco
             Catalyst Center based on the provided configuration information. 
-            If the specified user exists, the method checks if it requires an update
-            by calling the 'update_user_configuration' method. If an update is required, 
-            it calls the 'configure_user' function from the 'user_and_roles' family of 
-            the Cisco Catalyst Center API. If Current configuration same as input configuration 
-            does not require an update, the method exits, indicating that user is up to date.
+            If the specified user or role exists, the method checks if it requires an update
+            by calling the 'update_user_configuration' method or 'update_role_configuration' method. 
+            If an update is required, it calls the 'update_user_ap_i' or 'update_role_ap_i' function 
+            from the 'user_and_roles' family of the Cisco Catalyst Center API. 
+            If Current configuration same as input configuration does not require an update, 
+            the method exits, indicating that user or role is up to date.
         """
 
         config_updated = False
         config_created = False
         task_response = None
-        # check if the given user config exists and/or needs to be updated/created.
+        # check if the given user or role config exists and decided on updated/created operation need to be done.
 
-        if self.have.get("user_exists"):
-            #update the user
-            self.valid_user_config_parameters(config).check_return_status()
-            (consolidated_data, update_required_param) = self.user_requires_update(self.have["current_user_config"], self.have["current_role_config"])
+        if "role_name" in config and config["role_name"] is not None:
+            
+            if self.have.get("role_exists"):
+                pass
+                # #update the role
+                # self.valid_role_config_parameters(config).check_return_status()
+                # (consolidated_data, update_required_param) = self.role_requires_update(self.have["current_role_config"], self.have["current_role_id_config"])
 
-            if not consolidated_data:
-                # user does not need update
-                self.msg = "user does not need any update"
+                # if not consolidated_data:
+                #     # role does not need update
+                #     self.msg = "role does not need any update"
+                #     self.log(self.msg, "INFO")
+                #     responses = {}
+                #     responses["role_updates"] = {"response": config}
+                #     self.result['msg'] = self.msg
+                #     self.result["response"].append(responses)
+                #     self.result["skipped"] = True
+                #     return self
+                # role_in_have = self.have["current_role_config"] 
+                # update_param = update_required_param
+                # update_param["role_id"] = role_in_have.get("role_id")
+                # self.log('Final role data to update {}'.format(str(update_param)),
+                #       "INFO")
+                # task_response = self.update_role(update_param)
+                # self.log('Task respoonse {}'.format(str(task_response)),"INFO")
+                # config_updated = True
+
+            else:
+                # Create the role
+                self.valid_role_config_parameters(config).check_return_status()
+                self.log('Creating role with config {}'.format(str(config)), "INFO")
+                role_params = self.want
+                task_response = self.create_role(role_params)
+                self.log('Task response {}'.format(str(task_response)), "INFO")
+                config_created = True
+
+            responses = {}
+                
+            if config_updated:
+                responses["role_operation"] = {"response": task_response}
+                self.msg = responses
+                self.result['response'] = self.msg
+                self.status = "success"
                 self.log(self.msg, "INFO")
-                responses = {}
-                responses["users_updates"] = {"response": config}
-                self.result['msg'] = self.msg
-                self.result["response"].append(responses)
-                self.result["skipped"] = True
-                return self
-            user_in_have = self.have["current_user_config"]
-            update_param = update_required_param
-            update_param["user_id"] = user_in_have.get("user_id")
-            self.log('Final user data to update {}'.format(str(update_param)),
-                  "INFO")
-            task_response = self.update_user(update_param)
-            task_res = str(task_response)
-            self.log('Task respoonse {}'.format(str(task_res)),"INFO")
-            config_updated = True
 
-        else:
-            # Create the user
-            self.valid_user_config_parameters(config).check_return_status()
-            self.log('Creating user with config {}'.format(str(config)), "INFO")
-            user_params = self.want
+            if config_created:
+                responses["role_operation"] = {"response": task_response}
+                self.msg = responses
+                self.result['response'] = self.msg
+                self.status = "success"
+                self.log(self.msg, "INFO")
 
-            try:
+            return self
+
+        elif config["username"] is not None or config['email'] is not None:
+            if self.have.get("user_exists"):
+                #update the user
+                self.valid_user_config_parameters(config).check_return_status()
+                (consolidated_data, update_required_param) = self.user_requires_update(self.have["current_user_config"], self.have["current_role_id_config"])
+
+                if not consolidated_data:
+                    # user does not need update
+                    self.msg = "user does not need any update"
+                    self.log(self.msg, "INFO")
+                    responses = {}
+                    responses["users_updates"] = {"response": config}
+                    self.result['msg'] = self.msg
+                    self.result["response"].append(responses)
+                    self.result["skipped"] = True
+                    return self
+                user_in_have = self.have["current_user_config"]
+                update_param = update_required_param
+                update_param["user_id"] = user_in_have.get("user_id")
+                self.log('Final user data to update {}'.format(str(update_param)),
+                      "INFO")
+                task_response = self.update_user(update_param)
+                self.log('Task respoonse {}'.format(str(task_response)),"INFO")
+                config_updated = True
+
+            else:
+                # Create the user
+                self.valid_user_config_parameters(config).check_return_status()
+                self.log('Creating user with config {}'.format(str(config)), "INFO")
+                user_params = self.want
+
                 user_details = {}
 
                 for key, value in user_params.items():
@@ -1026,42 +1332,37 @@ class User(DnacBase):
                         if key != "role_list":
                             user_details[key] = value
                         else:
-                            current_role= self.have.get("current_role_config")
+                            current_role= self.have.get("current_role_id_config")
                             user_details[key] = []
                             for role_name in user_params['role_list']:
                                 role_id = current_role.get(role_name)
                                 if role_id:
                                     user_details[key].append(role_id)
                                 else:
-                                    self.log("Role ID for {0} not found in current_role_config".format(str(role_name)))
+                                    self.log("Role ID for {0} not found in current_role_id_config".format(str(role_name)))
 
                 user_params = user_details
-            except Exception as e:
-                user_name = user_params['username']
-                self.log("""The user '{0}' does not need additional filtering for 'None' values \
-                         in the 'user_params' dictionary.""".format(user_name), "INFO")
+                task_response = self.create_user(user_params)
+                self.log('Task response {}'.format(str(task_response)), "INFO")
+                config_created = True
 
-            task_response = self.create_user(user_params)
-            self.log('Task response {}'.format(str(task_response)), "INFO")
-            config_created = True
+            responses = {}
+                
+            if config_updated:
+                responses["users_operation"] = {"response": task_response}
+                self.msg = responses
+                self.result['response'] = self.msg
+                self.status = "success"
+                self.log(self.msg, "INFO")
 
-        responses = {}
-            
-        if config_updated:
-            responses["users_operation"] = {"response": task_res}
-            self.msg = responses
-            self.result['response'] = self.msg
-            self.status = "success"
-            self.log(self.msg, "INFO")
+            if config_created:
+                responses["users_operation"] = {"response": task_response}
+                self.msg = responses
+                self.result['response'] = self.msg
+                self.status = "success"
+                self.log(self.msg, "INFO")
 
-        if config_created:
-            responses["users_operation"] = {"response": task_response}
-            self.msg = responses
-            self.result['response'] = self.msg
-            self.status = "success"
-            self.log(self.msg, "INFO")
-
-        return self
+            return self
 
 
     def get_current_config(self, input_config):
@@ -1085,68 +1386,82 @@ class User(DnacBase):
         role_exists = False
         current_user_configuration = {}
         current_role_configuration = {}
+        current_role_id = {}
         response_user = None
         response_role = None
-        input_param = {}
+        input_param_user = {}
+        input_param_role = {}
 
-        if input_config.get("username") is not None and input_config.get("username") != "":
-            input_param["username"] = input_config["username"]
+        if "role_name" in input_config and input_config["role_name"] is not None:
+            if input_config.get("role_name") is not None and input_config.get("role_name") != "":
+                input_param_role["role_name"] = input_config["role_name"]
+            
+            if not input_param_role:
+                self.log("Required param role_name is not in playbook config", "ERROR")
+                return (role_exists, current_role_configuration, current_role_id)
 
-        if input_config.get("email") and all(item for item in input_config.get("email")):
-            input_param["email"] = input_config["email"]
+        elif input_config["username"] is not None or input_config["email"] is not None:
+            if input_config.get("username") is not None and input_config.get("username") != "":
+                input_param_user["username"] = input_config["username"]
 
-        if input_config.get("role_list") and all(item for item in input_config.get("role_list")):
-            input_param["role_list"] = input_config["role_list"]
+            if input_config.get("email") and all(item for item in input_config.get("email")):
+                input_param_user["email"] = input_config["email"]
 
-        if not input_param:
-            self.log("Required param username or email or role_list is not in playbook config", "ERROR")
-            return (user_exists, current_user_configuration, current_role_configuration)
+            if input_config.get("role_list") and all(item for item in input_config.get("role_list")):
+                input_param_user["role_list"] = input_config["role_list"]
 
-        try:
+            if not input_param_user:
+                self.log("Required param username or email or role_list is not in playbook config", "ERROR")
+                return (user_exists, role_exists, current_user_configuration, current_role_id)
 
-            response_user = self.dnac._exec(
-                family="user_and_roles",
-                function="get_users_ap_i",
-                op_modifies=True,
-                params={**input_param, 'invoke_source': 'external', 'auth_source': 'internal'},
-            )
-
-            response_role = self.dnac._exec(
-                family="user_and_roles",
-                function="get_roles_ap_i",
-                op_modifies=True,
-            )
-
-        except Exception as e:
-            self.log("The provided user '{0}' is either invalid or not present in the Cisco Catalyst Center."\
-                     .format(str(input_param) + str(e)), "WARNING")
+        response_user = self.dnac._exec(
+            family="user_and_roles",
+            function="get_users_ap_i",
+            op_modifies=True,
+            params={'invoke_source': 'external'},
+        )
+            
+        response_role = self.dnac._exec(
+            family="user_and_roles",
+            function="get_roles_ap_i",
+            op_modifies=True,
+        )
 
         if response_user and response_role:
             response_user = self.camel_to_snake_case(response_user)
             response_role = self.camel_to_snake_case(response_role)
-            current_user_configuration = {}
-            current_role_configuration = {}
+
             self.log("Received API response from 'get_users_api': {0}".format(str(response_user)), "DEBUG")
             self.log("Received API response from 'get_roles_api': {0}".format(str(response_role)), "DEBUG")
 
             users = response_user.get("response", {}).get("users", [])
             roles = response_role.get("response", {}).get("roles", [])
 
-            for user in users:
-                if user.get("username") == input_config.get("username"):
-                    current_user_configuration = user
-                    user_exists = True
-                elif user.get("email") == input_config.get("email"):
-                    current_user_configuration = user
-                    user_exists = True
+            if "role_name" in input_config and input_config["role_name"] is not None:
+                for role in roles:
+                    if role.get("name") == input_config.get("role_name"):
+                        current_role_configuration = role
+                        current_role_id[role.get("name")] = role.get("role_id")
+                        role_exists = True
 
-            if input_config.get("role_list") != None:
-              for role in roles:
-                  if role.get("name") in input_config.get("role_list"):
-                      current_role_configuration[role.get("name")] = role.get("role_id")
-                      role_exists = True
+                return (role_exists, current_role_configuration, current_role_id)
+            
+            elif input_config["username"] is not None or input_config["email"] is not None:
+                for user in users:
+                    if user.get("username") == input_config.get("username"):
+                        current_user_configuration = user
+                        user_exists = True
+                    elif user.get("email") == input_config.get("email"):
+                        current_user_configuration = user
+                        user_exists = True
 
-        return (user_exists, role_exists, current_user_configuration, current_role_configuration)
+                if input_config.get("role_list") != None:
+                  for role in roles:
+                      if role.get("name") in input_config.get("role_list"):
+                          current_role_id[role.get("name")] = role.get("role_id")
+                          role_exists = True
+
+                return (user_exists, role_exists, current_user_configuration, current_role_id)
 
 
     def create_user(self, user_params):
@@ -1171,7 +1486,210 @@ class User(DnacBase):
         )
         self.log("Received API response from 'create_user': {0}".format(str(response)), "DEBUG")
         return response
-    
+
+    def create_role (self, role_params):
+            """
+            Create a new role in Cisco Catalyst Center with the provided parameters.
+            Parameters:
+                self (object): An instance of a class used for interacting with Cisco Catalyst Center.
+                role_params (dict): A dictionary containing role information.
+            Returns:
+                response (dict): The API response from the 'create_role' function.
+            Description:
+                This method sends a request to create a new role in Cisco Catalyst Center using the provided
+                role parameters. It logs the response and returns it.
+            """
+            role_info_params= self.generate_role_payload(role_params)
+            self.log("Create role with role_info_params: {0}".format(str(role_info_params)), "DEBUG")
+            response = self.dnac._exec(
+                family="user_and_roles",
+                function='add_role_ap_i',
+                op_modifies=True,
+                params=role_info_params,
+            )
+            self.log("Received API response from 'create_role': {0}".format(str(response)), "DEBUG")
+            return response
+
+
+    def generate_role_payload(self, role_config):
+        if not role_config:
+            return None
+        
+        role_name = role_config.get("role_name", "")
+        description = role_config.get("description", "")
+        
+        resource_types = []
+        
+        # Process assurance rules
+        if "assurance" in role_config and role_config.get("assurance") is not None:
+            for assurance in role_config["assurance"]:
+                for resource, permission in assurance.items():
+                    if permission not in ['read', 'write', 'deny', None]:
+                        raise ValueError("Invalid permission '{}' for assurance resource '{}'".format(permission, resource))
+                    if permission != 'deny' and permission is not None:
+                        operations = self.convert_permission_to_operations(permission)
+                        resource_types.append({
+                            'type': 'Assurance.{}'.format(resource.replace("_", " ").title()),
+                            'operations': operations
+                        })
+        
+        # Process network analytics rules
+        if "network_analytics" in role_config and role_config.get("network_analytics") is not None:
+            for resource, permission in role_config["network_analytics"].items():
+                if permission not in ['read', 'write', 'deny', None]:
+                    raise ValueError("Invalid permission '{}' for network analytics resource '{}'".format(permission, resource))
+                if permission != 'deny' and permission is not None:
+                    operations = self.convert_permission_to_operations(permission)
+                    resource_types.append({
+                        'type': 'Network Analytics.{}'.format(resource.replace("_", " ").title()),
+                        'operations': operations
+                    })
+        
+        # Process network design rules
+        if "network_design" in role_config and role_config.get("network_design") is not None:
+            for network_design in role_config["network_design"]:
+                for resource, permission in network_design.items():
+                    if permission not in ['read', 'write', 'deny', None]:
+                        raise ValueError("Invalid permission '{}' for network design resource '{}'".format(permission, resource))
+                    if permission != 'deny' and permission is not None:
+                        operations = self.convert_permission_to_operations(permission)
+                        resource_types.append({
+                            'type': 'Network Design.{}'.format(resource.replace("_", " ").title()),
+                            'operations': operations
+                        })
+        
+        # Process network provision rules
+        if "network_provision" in role_config and role_config.get("network_provision") is not None:
+            self.process_network_provision(role_config["network_provision"], resource_types)
+        
+        # Process network services rules
+        if "network_services" in role_config and role_config.get("network_services") is not None:
+            for services in role_config["network_services"]:
+                for resource, permission in services.items():
+                    if permission not in ['read', 'write', 'deny', None]:
+                        raise ValueError("Invalid permission '{}' for network services resource '{}'".format(permission, resource))
+                    if permission != 'deny' and permission is not None:
+                        operations = self.convert_permission_to_operations(permission)
+                        resource_types.append({
+                            'type': 'Network Services.{}'.format(resource.replace("_", " ").title()),
+                            'operations': operations
+                        })
+        
+        # Process platform rules
+        if "platform" in role_config and role_config.get("platform") is not None:
+            for platform in role_config["platform"]:
+                for resource, permission in platform.items():
+                    if permission not in ['read', 'write', 'deny', None]:
+                        raise ValueError("Invalid permission '{}' for platform resource '{}'".format(permission, resource))
+                    if permission != 'deny' and permission is not None:
+                        operations = self.convert_permission_to_operations(permission)
+                        resource_types.append({
+                            'type': 'Platform.{}'.format(resource.replace("_", " ").title()),
+                            'operations': operations
+                        })
+        
+        # Process security rules
+        if "security" in role_config and role_config.get("security") is not None:
+            for security in role_config["security"]:
+                for resource, permission in security.items():
+                    if permission not in ['read', 'write', 'deny', None]:
+                        raise ValueError("Invalid permission '{}' for security resource '{}'".format(permission, resource))
+                    if permission != 'deny' and permission is not None:
+                        operations = self.convert_permission_to_operations(permission)
+                        if resource == "ip_based_access_control":
+                            resource_types.append({
+                                'type': 'Security.IP Based Access Control',
+                                'operations': operations
+                            })
+                        elif resource == "group_based_policy":
+                            resource_types.append({
+                                'type': 'Security.Group-Based Policy',
+                                'operations': operations
+                            })
+                        else:
+                            resource_types.append({
+                                'type': 'Security.{}'.format(resource.replace("_", " ").title()),
+                                'operations': operations
+                            })
+        
+        # Process system rules
+        if "system" in role_config and role_config.get("system") is not None:
+            for system in role_config["system"]:
+                for resource, permission in system.items():
+                    if permission not in ['read', 'write', 'deny', None]:
+                        raise ValueError("Invalid permission '{}' for system resource '{}'".format(permission, resource))
+                    if permission != 'deny' and permission is not None:
+                        operations = self.convert_permission_to_operations(permission)
+                        resource_types.append({
+                            'type': 'System.{}'.format(resource.replace("_", " ").title()),
+                            'operations': operations
+                        })
+        
+        # Process utilities rules
+        if "utilities" in role_config and role_config.get("utilities") is not None:
+            for utilities in role_config["utilities"]:
+                for resource, permission in utilities.items():
+                    if permission not in ['read', 'write', 'deny', None]:
+                        raise ValueError("Invalid permission '{}' for utilities resource '{}'".format(permission, resource))
+                    if permission != 'deny' and permission is not None:
+                        operations = self.convert_permission_to_operations(permission)
+                        resource_types.append({
+                            'type': 'Utilities.{}'.format(resource.replace("_", " ").title()),
+                            'operations': operations
+                        })
+        
+        # Construct the final payload
+        payload = {
+            'role': role_name,
+            'description': description,
+            'resourceTypes': resource_types
+        }
+        
+        return payload
+
+
+    def process_network_provision(self, network_provision, resource_types):
+        if not isinstance(network_provision, list):
+            return
+        
+        for provision in network_provision:
+            for resource, permission in provision.items():
+                if isinstance(permission, list):
+                    # Handle nested inventory_management
+                    for sub_resource, sub_permission in permission[0].items():
+                        if sub_permission not in ['read', 'write', 'deny', None]:
+                            raise ValueError(f"Invalid permission '{sub_permission}' for sub-resource '{sub_resource}'")
+                        if sub_permission != 'deny' and sub_permission != None:
+                            operations = self.convert_permission_to_operations(sub_permission)
+                            if sub_resource == 'port_management' and 'write' in operations:
+                                resource_types.append({
+                                    'type': f'Network Provision.Inventory Management.Port Management',
+                                    'operations': operations
+                                })
+                            else:
+                                resource_types.append({
+                                    'type': f'Network Provision.{resource.replace("_", " ").title()}.{sub_resource.replace("_", " ").title()}',
+                                    'operations': operations
+                                })
+                else:
+                    if permission not in ['read', 'write', 'deny', None]:
+                        raise ValueError(f"Invalid permission '{permission}' for resource '{resource}'")
+                    if permission != 'deny' and permission != None:
+                        operations = self.convert_permission_to_operations(permission)
+                        resource_types.append({
+                            'type': f'Network Provision.{resource.replace("_", " ").title()}',
+                            'operations': operations
+                        })
+
+
+    def convert_permission_to_operations(self, permission):
+        if permission == 'read':
+            return ['gRead']
+        elif permission == 'write':
+            return ['gRead', 'gUpdate', 'gCreate', 'gRemove']
+        else:
+            return None
+        
 
     def user_requires_update(self, current_user, current_role):
         """
@@ -1234,6 +1752,10 @@ class User(DnacBase):
                     update_required = True
                 elif 'role_list' not in update_user_param:
                     update_user_param['role_list'] = [current_role[self.want.get("role_list")[0]]]
+            else:
+                self.log("Role name is not present in Cisco Catalyst Center")
+                update_user_param['role_list'] = [self.want.get('role_list')[0]]
+                update_required = True
         else:
             update_user_param['role_list'] = current_user['role_list']
 
@@ -1262,7 +1784,7 @@ class User(DnacBase):
             params=user_info_params,
         )
         self.log("Received API response from 'update_user': {0}".format(str(response)), "DEBUG")
-        return self
+        return response
 
     def get_diff_deleted(self, config):
         """
@@ -1279,27 +1801,31 @@ class User(DnacBase):
 
         config_delete = False
 
-        if self.have.get("user_exists"):
-            self.valid_user_config_parameters(config).check_return_status()
-            self.log('Deleting user with config {}'.format(str(config)), "INFO")
+        if "role_name" in config and config["role_name"] is not None:
+            self.log("need to write code for role")
 
-            # Check if the username exists in self.have
-            current_user= self.have.get("current_user_config")
-            user_id_to_delete = {}
-            user_id_to_delete["user_id"] = current_user.get("user_id")
-            task_response = self.delete_user(user_id_to_delete)
-            self.log('Task response {}'.format(str(task_response)), "INFO")
-            config_delete = True
+        elif config["username"] is not None or config['email'] is not None:
+            if self.have.get("user_exists"):
+                self.valid_user_config_parameters(config).check_return_status()
+                self.log('Deleting user with config {}'.format(str(config)), "INFO")
 
-            if config_delete:
-                responses = {}
-                responses["users_operation"] = {"response": task_response}
-                self.msg = responses
-                self.result['response'] = self.msg
-                self.status = "success"
-                self.log(self.msg, "INFO")
+                # Check if the username exists in self.have
+                current_user= self.have.get("current_user_config")
+                user_id_to_delete = {}
+                user_id_to_delete["user_id"] = current_user.get("user_id")
+                task_response = self.delete_user(user_id_to_delete)
+                self.log('Task response {}'.format(str(task_response)), "INFO")
+                config_delete = True
 
-        return self
+                if config_delete:
+                    responses = {}
+                    responses["users_operation"] = {"response": task_response}
+                    self.msg = responses
+                    self.result['response'] = self.msg
+                    self.status = "success"
+                    self.log(self.msg, "INFO")
+
+            return self
 
 
     def delete_user(self, user_params):
@@ -1340,28 +1866,53 @@ class User(DnacBase):
             user exists in the Catalyst Center configuration.
         """
 
-        self.get_have(config)
-        self.log("Current State (have): {0}".format(str(self.have)), "INFO")
-        self.log("Desired State (want): {0}".format(str(self.want)), "INFO")
+        if "role_name" in config and config["role_name"] is not None:
+            self.get_have(config)
+            self.log("Current State (have): {0}".format(str(self.have)), "INFO")
+            self.log("Desired State (want): {0}".format(str(self.want)), "INFO")
 
-        # Code to validate ccc config for merged state
-        user_exist = self.have.get("user_exists")
-        user_name = self.want.get("username")
+            # Code to validate ccc config for merged state
+            role_exist = self.have.get("role_exists")
+            role_name = self.want.get("role_name")
 
-        if user_exist:
-            self.status = "success"
-            self.msg = "The requested user '{0}' is present in the Cisco Catalyst Center and its creation has been verified.".format(user_name)
-            self.log(self.msg, "INFO")
+            if role_exist:
+                self.status = "success"
+                self.msg = "The requested role '{0}' is present in the Cisco Catalyst Center and its creation has been verified.".format(role_name)
+                self.log(self.msg, "INFO")
 
-        (require_update, updated_user_info) = self.user_requires_update(self.have["current_user_config"], self.have["current_role_config"])
+            # (require_update, updated_user_info) = self.user_requires_update(self.have["current_user_config"], self.have["current_role_id_config"])
 
-        if not require_update:
-            self.log("The update for user '{0}' has been successfully verified. The updated info - {1}".format(user_name, updated_user_info), "INFO")
-            self. status = "success"
-            return self
+            # if not require_update:
+            #     self.log("The update for user '{0}' has been successfully verified. The updated info - {1}".format(user_name, updated_user_info), "INFO")
+            #     self. status = "success"
+            #     return self
 
-        self.log("""The playbook input for user '{0}' does not align with the Cisco Catalyst Center, indicating that the merge task
-                 may not have executed successfully.""".format(user_name), "INFO")
+            # self.log("""The playbook input for role '{0}' does not align with the Cisco Catalyst Center, indicating that the merge task
+            #         may not have executed successfully.""".format(role_name), "INFO")
+
+        elif config["username"] is not None or config['email'] is not None:
+            self.get_have(config)
+            self.log("Current State (have): {0}".format(str(self.have)), "INFO")
+            self.log("Desired State (want): {0}".format(str(self.want)), "INFO")
+
+            # Code to validate ccc config for merged state
+            user_exist = self.have.get("user_exists")
+            user_name = self.want.get("username")
+
+            if user_exist:
+                self.status = "success"
+                self.msg = "The requested user '{0}' is present in the Cisco Catalyst Center and its creation has been verified.".format(user_name)
+                self.log(self.msg, "INFO")
+
+            (require_update, updated_user_info) = self.user_requires_update(self.have["current_user_config"], self.have["current_role_id_config"])
+
+            if not require_update:
+                self.log("The update for user '{0}' has been successfully verified. The updated info - {1}".format(user_name, updated_user_info), "INFO")
+                self. status = "success"
+                return self
+
+            self.log("""The playbook input for user '{0}' does not align with the Cisco Catalyst Center, indicating that the merge task
+                    may not have executed successfully.""".format(user_name), "INFO")
 
         return self
 
@@ -1378,22 +1929,39 @@ class User(DnacBase):
             This method checks the deletion status of a configuration in Cisco Catalyst Center.
             It validates whether the specified site exists in the Catalyst Center configuration.
         """
+        if "role_name" in config and config["role_name"] is not None:
+            self.get_have(config)
+            self.log("Current State (have): {0}".format(str(self.have)), "INFO")
+            self.log("Desired State (want): {0}".format(str(self.want)), "INFO")
 
-        self.get_have(config)
-        self.log("Current State (have): {0}".format(str(self.have)), "INFO")
-        self.log("Desired State (want): {0}".format(str(self.want)), "INFO")
+            # Code to validate ccc config for delete state
+            role_exist = self.have.get("role_exists")
 
-        # Code to validate ccc config for delete state
-        user_exist = self.have.get("user_exists")
+            if not role_exist:
+                self.status = "success"
+                msg = """The requested role '{0}' has already been deleted from the Cisco Catalyst Center and this has been
+                    successfully verified.""".format(str(self.want.get("role_name")))
+                self.log(msg, "INFO")
+                return self
+            self.log("""Mismatch between the playbook input for role '{0}' and the Cisco Catalyst Center indicates that
+                    the deletion was not executed successfully.""".format(str(self.want.get("role_name"))), "INFO")
 
-        if not user_exist:
-            self.status = "success"
-            msg = """The requested user '{0}' has already been deleted from the Cisco Catalyst Center and this has been
-                successfully verified.""".format(str(self.want.get("username")))
-            self.log(msg, "INFO")
-            return self
-        self.log("""Mismatch between the playbook input for site '{0}' and the Cisco Catalyst Center indicates that
-                 the deletion was not executed successfully.""".format(str(self.want.get("username"))), "INFO")
+        elif config["username"] is not None or config['email'] is not None:
+            self.get_have(config)
+            self.log("Current State (have): {0}".format(str(self.have)), "INFO")
+            self.log("Desired State (want): {0}".format(str(self.want)), "INFO")
+
+            # Code to validate ccc config for delete state
+            user_exist = self.have.get("user_exists")
+
+            if not user_exist:
+                self.status = "success"
+                msg = """The requested user '{0}' has already been deleted from the Cisco Catalyst Center and this has been
+                    successfully verified.""".format(str(self.want.get("username")))
+                self.log(msg, "INFO")
+                return self
+            self.log("""Mismatch between the playbook input for user '{0}' and the Cisco Catalyst Center indicates that
+                    the deletion was not executed successfully.""".format(str(self.want.get("username"))), "INFO")
 
         return self
     
