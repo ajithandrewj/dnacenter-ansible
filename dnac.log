@@ -1,0 +1,42 @@
+08-08-2024 19:12:02 ERROR  Swim: get_diff_import: 1180: Error: Import image details are not provided in the playbook, or the Import Image API was not
+                 triggered successfully. Please ensure the necessary details are provided and verify the status of the Import Image process. 
+
+08-08-2024 19:13:22 ERROR  Swim: get_diff_import: 1180: Error: Import image details are not provided in the playbook, or the Import Image API was not
+                 triggered successfully. Please ensure the necessary details are provided and verify the status of the Import Image process. 
+
+08-08-2024 19:15:02 ERROR  Swim: get_diff_import: 1180: Error: Import image details are not provided in the playbook, or the Import Image API was not
+                 triggered successfully. Please ensure the necessary details are provided and verify the status of the Import Image process. 
+
+08-08-2024 19:15:57 ERROR  Swim: get_diff_import: 1180: Error: Import image details are not provided in the playbook, or the Import Image API was not
+                 triggered successfully. Please ensure the necessary details are provided and verify the status of the Import Image process. 
+
+08-08-2024 19:27:34 ERROR  Swim: get_device_uuids: 837: An exception occured while fetching the device uuids from Cisco Catalyst Center: string indices must be integers 
+
+08-08-2024 19:29:23 ERROR  Swim: get_device_uuids: 837: An exception occured while fetching the device uuids from Cisco Catalyst Center: string indices must be integers 
+
+08-08-2024 19:35:19 ERROR  Swim: get_device_uuids: 837: An exception occured while fetching the device uuids from Cisco Catalyst Center: string indices must be integers 
+
+08-08-2024 19:43:47 ERROR  Swim: get_device_uuids: 837: An exception occured while fetching the device uuids from Cisco Catalyst Center: string indices must be integers 
+
+08-08-2024 19:44:36 ERROR  Swim: get_device_uuids: 837: An exception occured while fetching the device uuids from Cisco Catalyst Center: string indices must be integers 
+
+08-08-2024 19:47:12 ERROR  Swim: get_device_uuids: 837: An exception occured while fetching the device uuids from Cisco Catalyst Center: string indices must be integers 
+
+08-08-2024 19:49:02 ERROR  Swim: get_device_uuids: 837: An exception occured while fetching the device uuids from Cisco Catalyst Center: string indices must be integers 
+
+08-08-2024 19:51:43 ERROR  Swim: get_device_uuids: 837: An exception occured while fetching the device uuids from Cisco Catalyst Center: string indices must be integers 
+
+08-08-2024 19:56:39 ERROR  Swim: get_device_uuids: 837: An exception occured while fetching the device uuids from Cisco Catalyst Center: string indices must be integers 
+
+08-08-2024 19:58:33 WARNING  Swim: get_diff_import: 1068: Error: Details required for importing SWIM image. Please provide the necessary information. 
+
+08-08-2024 19:58:33 ERROR  Swim: get_image_name_from_id: 653: SWIM image with Id '4a3cccfa-dc92-4fad-a7d3-c59876cbebe6' could not be found in Cisco Catalyst Center 
+
+08-08-2024 20:01:13 WARNING  Swim: get_diff_import: 1068: Error: Details required for importing SWIM image. Please provide the necessary information. 
+
+08-08-2024 20:01:42 WARNING  Swim: get_diff_import: 1068: Error: Details required for importing SWIM image. Please provide the necessary information. 
+
+08-08-2024 20:06:44 ERROR  Swim: get_device_uuids: 837: An exception occured while fetching the device uuids from Cisco Catalyst Center: string indices must be integers 
+
+08-08-2024 20:06:56 ERROR  Swim: get_device_uuids: 837: An exception occured while fetching the device uuids from Cisco Catalyst Center: string indices must be integers 
+

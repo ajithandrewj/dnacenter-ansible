@@ -1,0 +1,342 @@
+{
+    "playbook_config_invalid_param_import_image_url_tag_golden_load": [
+        {
+            "import_image_details": {
+                "type": "remote",
+                "url_details": {
+                    "payload": [
+                        {
+                            "source_url": "http://172.21.236.183/swim/V1712_2_CCO/cat9k_iosxe.17.12.02.SPA.bin",
+                            "third_party": false
+                        }
+                    ]
+                }
+            },
+            "tagging_details": {
+                "image_name": "cat9k_iosxe.17.12.02.SPA.bin",
+                "device_role": "ALL",
+                "device_image_family_name": "Cisco Catalyst 9000 UADP 8 Port Virtual Switch",
+                "site_name": "Global/LTTS/FLOOR1",
+                "tagging": true
+            },
+            "image_distribution_details": {
+                "image_name": "cat9k_iosxe.17.12.02.SPA.bin",
+                "device_serial_number": "FOC2225U12L"
+            },
+            "image_activation_details": {
+                "image_name": "cat9k_iosxe.17.12.02.SPA.bin",
+                "schedule_validate": false,
+                "activate_lower_image_version": false,
+                "distribute_if_needed": true,
+                "device_serial_number": "FOC2225U12L"
+            }
+        }
+    ],
+    "get_software_image_details": {
+        "response": [],
+        "version": "1.0"
+    },
+    "import_software_image_via_url": {
+        "response": {
+            "taskId": "019131f4-d6e5-7fb4-87cf-f2b201107fbe",
+            "url": "/api/v1/task/019131f4-d6e5-7fb4-87cf-f2b201107fbe"
+        },
+        "version": "1.0"
+    },
+    "task_details": {
+        "response": {
+            "startTime": 1723120015077,
+            "data": "import",
+            "endTime": 1723120047094,
+            "progress": "completed successfully.  Success = 1, Failure = 0, Running = 0, Pending = 0, Total = 1",
+            "version": 1723120047094,
+            "lastUpdate": 1723120015086,
+            "serviceType": "Swim Service",
+            "isError": false,
+            "instanceTenantId": "6663114d388b29001399e46a",
+            "id": "019131f4-d6e5-7fb4-87cf-f2b201107fbe"
+        },
+        "version": "1.0"
+    },
+    "get_software_image_1_details": {
+        "response": [
+            {
+                "imageUuid": "4a3cccfa-dc92-4fad-a7d3-c59876cbebe6",
+                "name": "cat9k_iosxe.17.12.02.SPA.bin",
+                "family": "CAT9K",
+                "version": "17.12.02.0.2739",
+                "displayVersion": "17.12.02",
+                "md5Checksum": "2405eeb2627eeee594078b6019a2d936",
+                "shaCheckSum": "457d3bc8240bcb18066c56051a5085d6cdaea5d0cc9df6ca615b2db84abe7672a29d1c3c6eaa784b487ff812847948bbdf3107d226feb96844fe54d0ba873c4c",
+                "createdTime": "2024-08-08 12:27:18.0",
+                "imageType": "SYSTEM_SW",
+                "fileSize": "1316755714 bytes",
+                "imageName": "cat9k_iosxe.17.12.02.SPA.bin",
+                "applicationType": "",
+                "feature": "",
+                "fileServiceId": "e6ff4ee1-1e8a-459d-b488-b555e5e31e72",
+                "isTaggedGolden": false,
+                "imageSource": "http://172.21.236.183/swim/V1712_2_CCO/cat9k_iosxe.17.12.02.SPA.bin",
+                "extendedAttributes": {
+                    "Description": "Cisco IOS Software, IOS-XE Software",
+                    "BOOTROM": "UNKNOWN",
+                    "MINFLASHSIZE": "UNKNOWN",
+                    "MEDIA": "5",
+                    "FULL_VERSION": "17.12.02.0.2739",
+                    "DEFAULT_BOOTROM": "UNKNOWN",
+                    "DEFAULT_RAM": "UNKNOWN",
+                    "GAIA_FEATURE": "UNKNOWN",
+                    "COMPRESSION_CODE": "-1",
+                    "DEFAULT_MINFLASHSIZE": "UNKNOWN",
+                    "RAM": "UNKNOWN"
+                },
+                "vendor": "CISCO",
+                "imageIntegrityStatus": "UNKNOWN",
+                "importSourceType": "REMOTEURL"
+            }
+        ],
+        "version": "1.0"
+    },
+    "get_site": {
+        "response": [
+            {
+                "parentId": "f41654c0-d03b-40ad-a3ae-4318ee2821d6",
+                "name": "FLOOR1",
+                "additionalInfo": [
+                    {
+                        "nameSpace": "Location",
+                        "attributes": {
+                            "addressInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6",
+                            "type": "floor"
+                        }
+                    },
+                    {
+                        "nameSpace": "mapsSummary",
+                        "attributes": {
+                            "rfModel": "162162",
+                            "floorIndex": "1"
+                        }
+                    },
+                    {
+                        "nameSpace": "mapGeometry",
+                        "attributes": {
+                            "offsetX": "0.0",
+                            "offsetY": "0.0",
+                            "length": "100.0",
+                            "width": "100.0",
+                            "height": "10.0"
+                        }
+                    }
+                ],
+                "instanceTenantId": "6663114d388b29001399e46a",
+                "id": "d5f8d954-0bc9-49a9-a24c-b3f05a01d31e",
+                "siteHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/f41654c0-d03b-40ad-a3ae-4318ee2821d6/d5f8d954-0bc9-49a9-a24c-b3f05a01d31e",
+                "siteNameHierarchy": "Global/LTTS/FLOOR1"
+            }
+        ]
+    },
+    "get_device_family_identifiers": {
+        "response": [
+            {
+                "deviceFamily": "Cisco Catalyst 8000V Edge Software",
+                "deviceFamilyIdentifier": "286327102"
+            },
+            {
+                "deviceFamily": "Cisco Catalyst 9300 Switch",
+                "deviceFamilyIdentifier": "286315874"
+            },
+            {
+                "deviceFamily": "Cisco Catalyst 9000 UADP 8 Port Virtual Switch",
+                "deviceFamilyIdentifier": "999999901"
+            }
+        ],
+        "version": "1.0"
+    },
+    "get_device_list": {
+        "response": [
+            {
+                "description": "Cisco IOS Software [IOSXE], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.16.20240710:041147 [BLD_POLARIS_DEV_LATEST_20240710_033600:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Tue 09-Ju",
+                "type": "Cisco Catalyst 9300 Switch",
+                "lastUpdateTime": 1723089164674,
+                "serialNumber": "FOC2225U12L",
+                "deviceSupportLevel": "Supported",
+                "softwareType": "IOS-XE",
+                "softwareVersion": "17.16.20240710:041147",
+                "inventoryStatusDetail": "<status><general code=\"SUCCESS\"/></status>",
+                "collectionInterval": "Global Default",
+                "dnsResolvedManagementAddress": "204.1.2.2",
+                "lastManagedResyncReasons": "Periodic",
+                "managementState": "Managed",
+                "pendingSyncRequestsCount": "0",
+                "reasonsForDeviceResync": "Periodic",
+                "reasonsForPendingSyncRequests": "",
+                "syncRequestedByApp": "",
+                "upTime": "18 days, 6:08:51.84",
+                "roleSource": "AUTO",
+                "interfaceCount": "0",
+                "lastUpdated": "2024-08-08 03:52:44",
+                "bootDateTime": "2024-07-20 21:44:44",
+                "apManagerInterfaceIp": "",
+                "collectionStatus": "Managed",
+                "family": "Switches and Hubs",
+                "hostname": "sjc_border.cisco.com",
+                "locationName": null,
+                "managementIpAddress": "204.1.2.2",
+                "platformId": "C9300-24UX",
+                "reachabilityFailureReason": "",
+                "reachabilityStatus": "Reachable",
+                "series": "Cisco Catalyst 9300 Series Switches",
+                "snmpContact": "",
+                "snmpLocation": "",
+                "associatedWlcIp": "",
+                "apEthernetMacAddress": null,
+                "errorCode": null,
+                "errorDescription": null,
+                "lastDeviceResyncStartTime": "2024-08-08 03:52:09",
+                "lineCardCount": "0",
+                "lineCardId": "",
+                "managedAtleastOnce": true,
+                "memorySize": "NA",
+                "tagCount": "0",
+                "tunnelUdpPort": null,
+                "uptimeSeconds": 1608166,
+                "vendor": "Cisco",
+                "waasDeviceMode": null,
+                "location": null,
+                "role": "DISTRIBUTION",
+                "macAddress": "dc:f7:19:33:41:00",
+                "instanceTenantId": "6663114d388b29001399e46a",
+                "instanceUuid": "4ea61bbc-5965-436f-b880-178331d4bdc6",
+                "id": "4ea61bbc-5965-436f-b880-178331d4bdc6"
+            }
+        ],
+        "version": "1.0"
+    },
+    "get_golden_tag_status_of_an_image": {
+        "response": {
+            "deviceRole": "ALL",
+            "inheritedSiteName": null,
+            "inheritedSiteId": null,
+            "taggedGolden": false
+        },
+        "version": "1.0"
+    },
+    "tag_as_golden_image": {
+        "response": {
+            "taskId": "019131f5-6880-77cc-9b9e-0a03dade3149",
+            "url": "/api/v1/task/019131f5-6880-77cc-9b9e-0a03dade3149"
+        },
+        "version": "1.0"
+    },
+    "task_1_details": {
+        "response": {
+            "startTime": 1723120052352,
+            "data": "Golden-Tagging",
+            "endTime": 1723120053660,
+            "progress": "Tagging image  cat9k_iosxe.17.12.02.SPA.bin  golden for site  FLOOR1 for family Cisco Catalyst 9000 UADP 8 Port Virtual Switch  for device deviceTag ALL successful.",
+            "version": 1723120053660,
+            "serviceType": "NCSW",
+            "isError": false,
+            "instanceTenantId": "6663114d388b29001399e46a",
+            "id": "019131f5-6880-77cc-9b9e-0a03dade3149"
+        },
+        "version": "1.0"
+    },
+    "get_1_site": {
+        "response": [
+            {
+                "name": "Global",
+                "additionalInfo": [],
+                "instanceTenantId": "6663114d388b29001399e46a",
+                "id": "0ceaa46f-e64b-448b-a01c-1c100c9b134b",
+                "siteHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b",
+                "siteNameHierarchy": "Global"
+            }
+        ]
+    },
+    "get_membership": {
+        "site": {"response": [{"parentId": "847b187b-6827-4a07-8d46-16d69f6e0389", "name": "Chennai", "groupTypeList": ["SITE"], "additionalInfo": [{"nameSpace": "Location", "attributes": {"addressInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "type": "area"}}, {"nameSpace": "System Settings", "attributes": {"group.count.total": "2", "hasChild": "TRUE", "group.count.direct": "1", "group.hierarchy.groupType": "SITE", "member.count.total": "0", "member.count.direct": "0"}}, {"nameSpace": "com.wireless.managingwlc", "attributes": {"secondaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "anchorWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "tertiaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "primaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389"}}], "groupHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/847b187b-6827-4a07-8d46-16d69f6e0389/235c9a87-67ba-4952-bf77-7c6fa6902ee2", "groupNameHierarchy": "Global/INDIA/Chennai", "instanceTenantId": "6663114d388b29001399e46a", "id": "235c9a87-67ba-4952-bf77-7c6fa6902ee2"}, {"parentId": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "name": "FLOOR1", "groupTypeList": ["SITE"], "additionalInfo": [{"nameSpace": "mapsSummary", "attributes": {"rfModel": "162162", "floorIndex": "1"}}, {"nameSpace": "Location", "attributes": {"addressInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "type": "floor"}}, {"nameSpace": "System Settings", "attributes": {"group.count.total": "0", "hasChild": "FALSE", "group.count.direct": "0", "group.hierarchy.groupType": "SITE", "member.count.total": "3", "member.count.direct": "3"}}, {"nameSpace": "com.wireless.managingwlc", "attributes": {"secondaryWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "anchorWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "tertiaryWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "primaryWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6"}}, {"nameSpace": "mapGeometry", "attributes": {"offsetX": "0.0", "offsetY": "0.0", "length": "100.0", "width": "100.0", "height": "10.0"}}], "groupHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/f41654c0-d03b-40ad-a3ae-4318ee2821d6/d5f8d954-0bc9-49a9-a24c-b3f05a01d31e", "groupNameHierarchy": "Global/LTTS/FLOOR1", "instanceTenantId": "6663114d388b29001399e46a", "id": "d5f8d954-0bc9-49a9-a24c-b3f05a01d31e"}, {"parentId": "0985a6ec-ae46-4033-be6e-db9379c036c8", "name": "Ground Floor", "groupTypeList": ["SITE"], "additionalInfo": [{"nameSpace": "mapsSummary", "attributes": {"rfModel": "162162", "floorIndex": "1"}}, {"nameSpace": "com.wireless.managingwlc", "attributes": {"secondaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "anchorWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "tertiaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "primaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389"}}, {"nameSpace": "mapGeometry", "attributes": {"offsetX": "0.0", "offsetY": "0.0", "length": "100.0", "width": "100.0", "height": "10.0"}}, {"nameSpace": "Location", "attributes": {"address": "Chennai, Tamil Nadu, India", "addressInheritedFrom": "0985a6ec-ae46-4033-be6e-db9379c036c8", "type": "floor"}}, {"nameSpace": "System Settings", "attributes": {"group.count.total": "0", "hasChild": "FALSE", "group.count.direct": "0", "group.hierarchy.groupType": "SITE", "member.count.total": "0", "member.count.direct": "0"}}], "groupHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/847b187b-6827-4a07-8d46-16d69f6e0389/235c9a87-67ba-4952-bf77-7c6fa6902ee2/0985a6ec-ae46-4033-be6e-db9379c036c8/09f1dc00-6d7f-4d0c-b8b5-cdd6cd6dc7d7", "groupNameHierarchy": "Global/INDIA/Chennai/LnT TC3/Ground Floor", "instanceTenantId": "6663114d388b29001399e46a", "id": "09f1dc00-6d7f-4d0c-b8b5-cdd6cd6dc7d7"}, {"parentId": "0ceaa46f-e64b-448b-a01c-1c100c9b134b", "name": "INDIA", "groupTypeList": ["SITE"], "additionalInfo": [{"nameSpace": "Location", "attributes": {"addressInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "type": "area"}}, {"nameSpace": "com.wireless.managingwlc", "attributes": {"secondaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "anchorWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "tertiaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "primaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389"}}, {"nameSpace": "System Settings", "attributes": {"group.count.total": "3", "hasChild": "TRUE", "group.count.direct": "1", "group.hierarchy.groupType": "SITE", "member.count.total": "0", "member.count.direct": "0"}}], "groupHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/847b187b-6827-4a07-8d46-16d69f6e0389", "groupNameHierarchy": "Global/INDIA", "instanceTenantId": "6663114d388b29001399e46a", "id": "847b187b-6827-4a07-8d46-16d69f6e0389"}, {"parentId": "235c9a87-67ba-4952-bf77-7c6fa6902ee2", "name": "LnT TC3", "groupTypeList": ["SITE"], "additionalInfo": [{"nameSpace": "com.wireless.managingwlc", "attributes": {"secondaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "anchorWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "tertiaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "primaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389"}}, {"nameSpace": "System Settings", "attributes": {"group.count.total": "1", "hasChild": "TRUE", "group.count.direct": "1", "group.hierarchy.groupType": "SITE", "member.count.total": "0", "member.count.direct": "0"}}, {"nameSpace": "Location", "attributes": {"country": "India", "address": "Chennai, Tamil Nadu, India", "latitude": "13.084289", "addressInheritedFrom": "0985a6ec-ae46-4033-be6e-db9379c036c8", "type": "building", "longitude": "80.27044"}}], "groupHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/847b187b-6827-4a07-8d46-16d69f6e0389/235c9a87-67ba-4952-bf77-7c6fa6902ee2/0985a6ec-ae46-4033-be6e-db9379c036c8", "groupNameHierarchy": "Global/INDIA/Chennai/LnT TC3", "instanceTenantId": "6663114d388b29001399e46a", "id": "0985a6ec-ae46-4033-be6e-db9379c036c8"}, {"parentId": "0ceaa46f-e64b-448b-a01c-1c100c9b134b", "name": "LTTS", "groupTypeList": ["SITE"], "additionalInfo": [{"nameSpace": "System Settings", "attributes": {"group.count.total": "1", "hasChild": "TRUE", "group.count.direct": "1", "group.hierarchy.groupType": "SITE", "member.count.total": "3", "member.count.direct": "0"}}, {"nameSpace": "com.wireless.managingwlc", "attributes": {"secondaryWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "anchorWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "tertiaryWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "primaryWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6"}}, {"nameSpace": "Location", "attributes": {"country": "India", "latitude": "37.23", "addressInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "type": "building", "longitude": "180"}}], "groupHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/f41654c0-d03b-40ad-a3ae-4318ee2821d6", "groupNameHierarchy": "Global/LTTS", "instanceTenantId": "6663114d388b29001399e46a", "id": "f41654c0-d03b-40ad-a3ae-4318ee2821d6"}], "version": "1.0"}, "device": [{"response": [{"instanceUuid": "93dad04d-d795-4902-a685-37205483ee5d", "instanceTenantId": "6663114d388b29001399e46a", "deployPending": "NONE", "instanceVersion": 0, "apManagerInterfaceIp": "", "associatedWlcIp": "", "bootDateTime": "2024-07-22 03:38:30", "collectionInterval": "Global Default", "collectionIntervalValue": "24:00:00", "collectionStatus": "Managed", "collectionTier": "Not Applicable", "description": "Cisco IOS Software [IOSXE], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Experimental Version 17.15.20240713:012228 [BLD_V1715_THROTTLE_LATEST_20240713_002204:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Com", "deviceSupportLevel": "Supported", "dnsResolvedManagementAddress": "204.1.2.10", "family": "Routers", "hostname": "Vrouter2.cisco.com", "interfaceCount": "0", "inventoryStatusDetail": "<status><general code='SUCCESS'/></status>", "lastDeviceResyncStartTime": "2024-08-08 10:02:12", "lastManagedResyncReasons": "Periodic", "lastUpdateTime": 1723111350784, "lastUpdated": "2024-08-08 10:02:30", "lineCardCount": "0", "lineCardId": "", "macAddress": "00:1e:7a:80:39:00", "managedAtleastOnce": false, "managementIpAddress": "204.1.2.10", "managementState": "Managed", "memorySize": "NA", "paddedMgmtIpAddress": "204.  1.  2. 10", "pendingSyncRequestsCount": "0", "platformId": "C8000V", "reachabilityFailureReason": "", "reachabilityStatus": "Reachable", "reasonsForDeviceResync": "Periodic", "reasonsForPendingSyncRequests": "", "role": "BORDER ROUTER", "roleSource": "AUTO", "serialNumber": "91R03VNQU8W", "series": "Cloud Edge", "snmpContact": "", "snmpLocation": "", "softwareType": "IOS-XE", "softwareVersion": "17.15.20240713:012228", "syncRequestedByApp": "", "tagCount": "0", "type": "Cisco Catalyst 8000V Edge Software", "upTime": "17 days, 6:24:44.22", "uptimeSeconds": 1500544, "vendor": "Cisco"}, {"instanceUuid": "c5c9215b-5c4a-4a9d-bfe5-9f18739a3b3e", "instanceTenantId": "6663114d388b29001399e46a", "deployPending": "NONE", "instanceVersion": 0, "apManagerInterfaceIp": "", "associatedWlcIp": "", "bootDateTime": "2024-07-29 06:30:27", "collectionInterval": "Global Default", "collectionIntervalValue": "24:00:00", "collectionStatus": "Managed", "collectionTier": "Not Applicable", "description": "Cisco IOS Software [IOSXE], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Experimental Version 17.15.20240713:012228 [BLD_V1715_THROTTLE_LATEST_20240713_002204:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Com", "deviceSupportLevel": "Supported", "dnsResolvedManagementAddress": "204.1.2.9", "family": "Routers", "hostname": "vRouter1.cisco.com", "interfaceCount": "0", "inventoryStatusDetail": "<status><general code='SUCCESS'/></status>", "lastDeviceResyncStartTime": "2024-08-08 03:52:09", "lastManagedResyncReasons": "Periodic", "lastUpdateTime": 1723089147815, "lastUpdated": "2024-08-08 03:52:27", "lineCardCount": "0", "lineCardId": "", "macAddress": "00:1e:f6:22:46:00", "managedAtleastOnce": false, "managementIpAddress": "204.1.2.9", "managementState": "Managed", "memorySize": "NA", "paddedMgmtIpAddress": "204.  1.  2.  9", "pendingSyncRequestsCount": "0", "platformId": "C8000V", "reachabilityFailureReason": "", "reachabilityStatus": "Reachable", "reasonsForDeviceResync": "Periodic", "reasonsForPendingSyncRequests": "", "role": "BORDER ROUTER", "roleSource": "AUTO", "serialNumber": "93K2LNK8A5Y", "series": "Cloud Edge", "snmpContact": "", "snmpLocation": "", "softwareType": "IOS-XE", "softwareVersion": "17.15.20240713:012228", "syncRequestedByApp": "", "tagCount": "0", "type": "Cisco Catalyst 8000V Edge Software", "upTime": "9 days, 21:22:47.82", "uptimeSeconds": 885427, "vendor": "Cisco"}], "version": "1.0", "siteId": "0ceaa46f-e64b-448b-a01c-1c100c9b134b"}, {"response": [], "version": "1.0", "siteId": "235c9a87-67ba-4952-bf77-7c6fa6902ee2", "message": "Site doesn’t not have device member with given device family or serial number as input"}, {"response": [{"instanceUuid": "4ea61bbc-5965-436f-b880-178331d4bdc6", "instanceTenantId": "6663114d388b29001399e46a", "deployPending": "NONE", "instanceVersion": 0, "apManagerInterfaceIp": "", "associatedWlcIp": "", "bootDateTime": "2024-07-20 21:44:44", "collectionInterval": "Global Default", "collectionIntervalValue": "24:00:00", "collectionStatus": "Managed", "collectionTier": "Not Applicable", "description": "Cisco IOS Software [IOSXE], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.16.20240710:041147 [BLD_POLARIS_DEV_LATEST_20240710_033600:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Tue 09-Ju", "deviceSupportLevel": "Supported", "dnsResolvedManagementAddress": "204.1.2.2", "family": "Switches and Hubs", "hostname": "sjc_border.cisco.com", "interfaceCount": "0", "inventoryStatusDetail": "<status><general code='SUCCESS'/></status>", "lastDeviceResyncStartTime": "2024-08-08 03:52:09", "lastManagedResyncReasons": "Periodic", "lastUpdateTime": 1723089164674, "lastUpdated": "2024-08-08 03:52:44", "lineCardCount": "0", "lineCardId": "", "macAddress": "dc:f7:19:33:41:00", "managedAtleastOnce": false, "managementIpAddress": "204.1.2.2", "managementState": "Managed", "memorySize": "NA", "paddedMgmtIpAddress": "204.  1.  2.  2", "pendingSyncRequestsCount": "0", "platformId": "C9300-24UX", "reachabilityFailureReason": "", "reachabilityStatus": "Reachable", "reasonsForDeviceResync": "Periodic", "reasonsForPendingSyncRequests": "", "role": "DISTRIBUTION", "roleSource": "AUTO", "serialNumber": "FOC2225U12L", "series": "Cisco Catalyst 9300 Series Switches", "snmpContact": "", "snmpLocation": "", "softwareType": "IOS-XE", "softwareVersion": "17.16.20240710:041147", "syncRequestedByApp": "", "tagCount": "0", "type": "Cisco Catalyst 9300 Switch", "upTime": "18 days, 6:08:51.84", "uptimeSeconds": 1608170, "vendor": "Cisco"}, {"instanceUuid": "6cae0779-a144-4208-a0f8-4eaca1542d61", "instanceTenantId": "6663114d388b29001399e46a", "deployPending": "NONE", "instanceVersion": 0, "apManagerInterfaceIp": "", "associatedWlcIp": "", "bootDateTime": "2024-07-22 03:40:02", "collectionInterval": "Global Default", "collectionIntervalValue": "24:00:00", "collectionStatus": "Managed", "collectionTier": "Not Applicable", "description": "Cisco IOS Software [IOSXE], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.15.20240713:010153 [BLD_V1715_THROTTLE_LATEST_20240713_002204:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Fri 12", "deviceSupportLevel": "Supported", "dnsResolvedManagementAddress": "204.1.2.4", "family": "Switches and Hubs", "hostname": "RMA_SJC_EDGE2.cisco.com", "interfaceCount": "0", "inventoryStatusDetail": "<status><general code='SUCCESS'/></status>", "lastDeviceResyncStartTime": "2024-08-08 03:52:09", "lastManagedResyncReasons": "Periodic", "lastUpdateTime": 1723089182511, "lastUpdated": "2024-08-08 03:53:02", "lineCardCount": "0", "lineCardId": "", "macAddress": "00:50:56:b4:71:6e", "managedAtleastOnce": false, "managementIpAddress": "204.1.2.4", "managementState": "Managed", "memorySize": "NA", "paddedMgmtIpAddress": "204.  1.  2.  4", "pendingSyncRequestsCount": "0", "platformId": "C9KV-UADP-8P", "reachabilityFailureReason": "", "reachabilityStatus": "Reachable", "reasonsForDeviceResync": "Periodic", "reasonsForPendingSyncRequests": "", "role": "ACCESS", "roleSource": "AUTO", "serialNumber": "9X8X6SWXCLM", "series": "Cisco Catalyst 9000 Series Virtual Switches", "snmpContact": "", "snmpLocation": "", "softwareType": "IOS-XE", "softwareVersion": "17.15.20240713:010153", "syncRequestedByApp": "", "tagCount": "0", "type": "Cisco Catalyst 9000 UADP 8 Port Virtual Switch", "upTime": "17 days, 0:13:34.00", "uptimeSeconds": 1500453, "vendor": "Cisco"}, {"instanceUuid": "ec0b4a9e-fc6e-4ffe-86bc-955b3940578a", "instanceTenantId": "6663114d388b29001399e46a", "deployPending": "NONE", "instanceVersion": 0, "apManagerInterfaceIp": "", "associatedWlcIp": "", "bootDateTime": "2024-07-22 03:39:56", "collectionInterval": "Global Default", "collectionIntervalValue": "24:00:00", "collectionStatus": "Managed", "collectionTier": "Not Applicable", "description": "Cisco IOS Software [IOSXE], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.15.20240612:011957 [BLD_V1715_THROTTLE_LATEST_20240612_002610:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Tue 11", "deviceSupportLevel": "Supported", "dnsResolvedManagementAddress": "204.1.2.3", "family": "Switches and Hubs", "hostname": "SJ_Edge1", "interfaceCount": "0", "inventoryStatusDetail": "<status><general code='SUCCESS'/></status>", "lastDeviceResyncStartTime": "2024-08-08 03:52:09", "lastManagedResyncReasons": "Periodic", "lastUpdateTime": 1723089176947, "lastUpdated": "2024-08-08 03:52:56", "lineCardCount": "0", "lineCardId": "", "macAddress": "00:50:56:b4:ff:2a", "managedAtleastOnce": false, "managementIpAddress": "204.1.2.3", "managementState": "Managed", "memorySize": "NA", "paddedMgmtIpAddress": "204.  1.  2.  3", "pendingSyncRequestsCount": "0", "platformId": "C9KV-UADP-8P", "reachabilityFailureReason": "", "reachabilityStatus": "Reachable", "reasonsForDeviceResync": "Periodic", "reasonsForPendingSyncRequests": "", "role": "ACCESS", "roleSource": "AUTO", "serialNumber": "99IA669OFH1", "series": "Cisco Catalyst 9000 Series Virtual Switches", "snmpContact": "", "snmpLocation": "", "softwareType": "IOS-XE", "softwareVersion": "17.15.20240612:011957", "syncRequestedByApp": "", "tagCount": "0", "type": "Cisco Catalyst 9000 UADP 8 Port Virtual Switch", "upTime": "17 days, 0:13:29.00", "uptimeSeconds": 1500458, "vendor": "Cisco"}], "version": "1.0", "siteId": "d5f8d954-0bc9-49a9-a24c-b3f05a01d31e"}, {"response": [], "version": "1.0", "siteId": "09f1dc00-6d7f-4d0c-b8b5-cdd6cd6dc7d7", "message": "Site doesn’t not have device member with given device family or serial number as input"}, {"response": [], "version": "1.0", "siteId": "847b187b-6827-4a07-8d46-16d69f6e0389", "message": "Site doesn’t not have device member with given device family or serial number as input"}, {"response": [], "version": "1.0", "siteId": "0985a6ec-ae46-4033-be6e-db9379c036c8", "message": "Site doesn’t not have device member with given device family or serial number as input"}, {"response": [], "version": "1.0", "siteId": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "message": "Site doesn’t not have device member with given device family or serial number as input"}]
+    },
+    "trigger_software_image_distribution": {
+        "response": {
+            "taskId": "019131f5-7abc-724f-b254-dc010c4faa45",
+            "url": "/api/v1/task/019131f5-7abc-724f-b254-dc010c4faa45"
+        },
+        "version": "1.0"
+    },
+    "task_2_details": {
+        "response": {
+            "startTime": 1723120057020,
+            "data": "distribute",
+            "endTime": 1723120062831,
+            "progress": "completed successfully.  Success = 1, Failure = 0, Running = 0, Pending = 0, Total = 1",
+            "version": 1723120062831,
+            "lastUpdate": 1723120057026,
+            "serviceType": "Swim Service",
+            "isError": false,
+            "instanceTenantId": "6663114d388b29001399e46a",
+            "id": "019131f5-7abc-724f-b254-dc010c4faa45"
+        },
+        "version": "1.0"
+    },
+    "get_1_membership": {
+        "site": {"response": [{"parentId": "847b187b-6827-4a07-8d46-16d69f6e0389", "name": "Chennai", "groupTypeList": ["SITE"], "additionalInfo": [{"nameSpace": "System Settings", "attributes": {"group.count.total": "2", "hasChild": "TRUE", "group.count.direct": "1", "group.hierarchy.groupType": "SITE", "member.count.total": "0", "member.count.direct": "0"}}, {"nameSpace": "Location", "attributes": {"addressInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "type": "area"}}, {"nameSpace": "com.wireless.managingwlc", "attributes": {"secondaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "anchorWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "tertiaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "primaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389"}}], "groupHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/847b187b-6827-4a07-8d46-16d69f6e0389/235c9a87-67ba-4952-bf77-7c6fa6902ee2", "groupNameHierarchy": "Global/INDIA/Chennai", "instanceTenantId": "6663114d388b29001399e46a", "id": "235c9a87-67ba-4952-bf77-7c6fa6902ee2"}, {"parentId": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "name": "FLOOR1", "groupTypeList": ["SITE"], "additionalInfo": [{"nameSpace": "mapGeometry", "attributes": {"offsetX": "0.0", "offsetY": "0.0", "length": "100.0", "width": "100.0", "height": "10.0"}}, {"nameSpace": "mapsSummary", "attributes": {"rfModel": "162162", "floorIndex": "1"}}, {"nameSpace": "System Settings", "attributes": {"group.count.total": "0", "hasChild": "FALSE", "group.count.direct": "0", "group.hierarchy.groupType": "SITE", "member.count.total": "3", "member.count.direct": "3"}}, {"nameSpace": "com.wireless.managingwlc", "attributes": {"secondaryWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "anchorWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "tertiaryWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "primaryWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6"}}, {"nameSpace": "Location", "attributes": {"addressInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "type": "floor"}}], "groupHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/f41654c0-d03b-40ad-a3ae-4318ee2821d6/d5f8d954-0bc9-49a9-a24c-b3f05a01d31e", "groupNameHierarchy": "Global/LTTS/FLOOR1", "instanceTenantId": "6663114d388b29001399e46a", "id": "d5f8d954-0bc9-49a9-a24c-b3f05a01d31e"}, {"parentId": "0985a6ec-ae46-4033-be6e-db9379c036c8", "name": "Ground Floor", "groupTypeList": ["SITE"], "additionalInfo": [{"nameSpace": "mapGeometry", "attributes": {"offsetX": "0.0", "offsetY": "0.0", "length": "100.0", "width": "100.0", "height": "10.0"}}, {"nameSpace": "System Settings", "attributes": {"group.count.total": "0", "hasChild": "FALSE", "group.count.direct": "0", "group.hierarchy.groupType": "SITE", "member.count.total": "0", "member.count.direct": "0"}}, {"nameSpace": "com.wireless.managingwlc", "attributes": {"secondaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "anchorWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "tertiaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "primaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389"}}, {"nameSpace": "mapsSummary", "attributes": {"rfModel": "162162", "floorIndex": "1"}}, {"nameSpace": "Location", "attributes": {"address": "Chennai, Tamil Nadu, India", "addressInheritedFrom": "0985a6ec-ae46-4033-be6e-db9379c036c8", "type": "floor"}}], "groupHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/847b187b-6827-4a07-8d46-16d69f6e0389/235c9a87-67ba-4952-bf77-7c6fa6902ee2/0985a6ec-ae46-4033-be6e-db9379c036c8/09f1dc00-6d7f-4d0c-b8b5-cdd6cd6dc7d7", "groupNameHierarchy": "Global/INDIA/Chennai/LnT TC3/Ground Floor", "instanceTenantId": "6663114d388b29001399e46a", "id": "09f1dc00-6d7f-4d0c-b8b5-cdd6cd6dc7d7"}, {"parentId": "0ceaa46f-e64b-448b-a01c-1c100c9b134b", "name": "INDIA", "groupTypeList": ["SITE"], "additionalInfo": [{"nameSpace": "com.wireless.managingwlc", "attributes": {"secondaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "anchorWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "tertiaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "primaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389"}}, {"nameSpace": "System Settings", "attributes": {"group.count.total": "3", "hasChild": "TRUE", "group.count.direct": "1", "group.hierarchy.groupType": "SITE", "member.count.total": "0", "member.count.direct": "0"}}, {"nameSpace": "Location", "attributes": {"addressInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "type": "area"}}], "groupHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/847b187b-6827-4a07-8d46-16d69f6e0389", "groupNameHierarchy": "Global/INDIA", "instanceTenantId": "6663114d388b29001399e46a", "id": "847b187b-6827-4a07-8d46-16d69f6e0389"}, {"parentId": "235c9a87-67ba-4952-bf77-7c6fa6902ee2", "name": "LnT TC3", "groupTypeList": ["SITE"], "additionalInfo": [{"nameSpace": "System Settings", "attributes": {"group.count.total": "1", "hasChild": "TRUE", "group.count.direct": "1", "group.hierarchy.groupType": "SITE", "member.count.total": "0", "member.count.direct": "0"}}, {"nameSpace": "Location", "attributes": {"country": "India", "address": "Chennai, Tamil Nadu, India", "latitude": "13.084289", "addressInheritedFrom": "0985a6ec-ae46-4033-be6e-db9379c036c8", "type": "building", "longitude": "80.27044"}}, {"nameSpace": "com.wireless.managingwlc", "attributes": {"secondaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "anchorWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "tertiaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389", "primaryWlcInheritedFrom": "847b187b-6827-4a07-8d46-16d69f6e0389"}}], "groupHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/847b187b-6827-4a07-8d46-16d69f6e0389/235c9a87-67ba-4952-bf77-7c6fa6902ee2/0985a6ec-ae46-4033-be6e-db9379c036c8", "groupNameHierarchy": "Global/INDIA/Chennai/LnT TC3", "instanceTenantId": "6663114d388b29001399e46a", "id": "0985a6ec-ae46-4033-be6e-db9379c036c8"}, {"parentId": "0ceaa46f-e64b-448b-a01c-1c100c9b134b", "name": "LTTS", "groupTypeList": ["SITE"], "additionalInfo": [{"nameSpace": "System Settings", "attributes": {"group.count.total": "1", "hasChild": "TRUE", "group.count.direct": "1", "group.hierarchy.groupType": "SITE", "member.count.total": "3", "member.count.direct": "0"}}, {"nameSpace": "com.wireless.managingwlc", "attributes": {"secondaryWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "anchorWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "tertiaryWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "primaryWlcInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6"}}, {"nameSpace": "Location", "attributes": {"country": "India", "latitude": "37.23", "addressInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "type": "building", "longitude": "180"}}], "groupHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/f41654c0-d03b-40ad-a3ae-4318ee2821d6", "groupNameHierarchy": "Global/LTTS", "instanceTenantId": "6663114d388b29001399e46a", "id": "f41654c0-d03b-40ad-a3ae-4318ee2821d6"}], "version": "1.0"}, "device": [{"response": [{"instanceUuid": "93dad04d-d795-4902-a685-37205483ee5d", "instanceTenantId": "6663114d388b29001399e46a", "deployPending": "NONE", "instanceVersion": 0, "apManagerInterfaceIp": "", "associatedWlcIp": "", "bootDateTime": "2024-07-22 03:38:30", "collectionInterval": "Global Default", "collectionIntervalValue": "24:00:00", "collectionStatus": "Managed", "collectionTier": "Not Applicable", "description": "Cisco IOS Software [IOSXE], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Experimental Version 17.15.20240713:012228 [BLD_V1715_THROTTLE_LATEST_20240713_002204:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Com", "deviceSupportLevel": "Supported", "dnsResolvedManagementAddress": "204.1.2.10", "family": "Routers", "hostname": "Vrouter2.cisco.com", "interfaceCount": "0", "inventoryStatusDetail": "<status><general code='SUCCESS'/></status>", "lastDeviceResyncStartTime": "2024-08-08 10:02:12", "lastManagedResyncReasons": "Periodic", "lastUpdateTime": 1723111350784, "lastUpdated": "2024-08-08 10:02:30", "lineCardCount": "0", "lineCardId": "", "macAddress": "00:1e:7a:80:39:00", "managedAtleastOnce": false, "managementIpAddress": "204.1.2.10", "managementState": "Managed", "memorySize": "NA", "paddedMgmtIpAddress": "204.  1.  2. 10", "pendingSyncRequestsCount": "0", "platformId": "C8000V", "reachabilityFailureReason": "", "reachabilityStatus": "Reachable", "reasonsForDeviceResync": "Periodic", "reasonsForPendingSyncRequests": "", "role": "BORDER ROUTER", "roleSource": "AUTO", "serialNumber": "91R03VNQU8W", "series": "Cloud Edge", "snmpContact": "", "snmpLocation": "", "softwareType": "IOS-XE", "softwareVersion": "17.15.20240713:012228", "syncRequestedByApp": "", "tagCount": "0", "type": "Cisco Catalyst 8000V Edge Software", "upTime": "17 days, 6:24:44.22", "uptimeSeconds": 1500553, "vendor": "Cisco"}, {"instanceUuid": "c5c9215b-5c4a-4a9d-bfe5-9f18739a3b3e", "instanceTenantId": "6663114d388b29001399e46a", "deployPending": "NONE", "instanceVersion": 0, "apManagerInterfaceIp": "", "associatedWlcIp": "", "bootDateTime": "2024-07-29 06:30:27", "collectionInterval": "Global Default", "collectionIntervalValue": "24:00:00", "collectionStatus": "Managed", "collectionTier": "Not Applicable", "description": "Cisco IOS Software [IOSXE], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Experimental Version 17.15.20240713:012228 [BLD_V1715_THROTTLE_LATEST_20240713_002204:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Com", "deviceSupportLevel": "Supported", "dnsResolvedManagementAddress": "204.1.2.9", "family": "Routers", "hostname": "vRouter1.cisco.com", "interfaceCount": "0", "inventoryStatusDetail": "<status><general code='SUCCESS'/></status>", "lastDeviceResyncStartTime": "2024-08-08 03:52:09", "lastManagedResyncReasons": "Periodic", "lastUpdateTime": 1723089147815, "lastUpdated": "2024-08-08 03:52:27", "lineCardCount": "0", "lineCardId": "", "macAddress": "00:1e:f6:22:46:00", "managedAtleastOnce": false, "managementIpAddress": "204.1.2.9", "managementState": "Managed", "memorySize": "NA", "paddedMgmtIpAddress": "204.  1.  2.  9", "pendingSyncRequestsCount": "0", "platformId": "C8000V", "reachabilityFailureReason": "", "reachabilityStatus": "Reachable", "reasonsForDeviceResync": "Periodic", "reasonsForPendingSyncRequests": "", "role": "BORDER ROUTER", "roleSource": "AUTO", "serialNumber": "93K2LNK8A5Y", "series": "Cloud Edge", "snmpContact": "", "snmpLocation": "", "softwareType": "IOS-XE", "softwareVersion": "17.15.20240713:012228", "syncRequestedByApp": "", "tagCount": "0", "type": "Cisco Catalyst 8000V Edge Software", "upTime": "9 days, 21:22:47.82", "uptimeSeconds": 885436, "vendor": "Cisco"}], "version": "1.0", "siteId": "0ceaa46f-e64b-448b-a01c-1c100c9b134b"}, {"response": [], "version": "1.0", "siteId": "235c9a87-67ba-4952-bf77-7c6fa6902ee2", "message": "Site doesn’t not have device member with given device family or serial number as input"}, {"response": [{"instanceUuid": "4ea61bbc-5965-436f-b880-178331d4bdc6", "instanceTenantId": "6663114d388b29001399e46a", "deployPending": "NONE", "instanceVersion": 0, "apManagerInterfaceIp": "", "associatedWlcIp": "", "bootDateTime": "2024-07-20 21:44:44", "collectionInterval": "Global Default", "collectionIntervalValue": "24:00:00", "collectionStatus": "In Progress", "collectionTier": "Not Applicable", "description": "Cisco IOS Software [IOSXE], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.16.20240710:041147 [BLD_POLARIS_DEV_LATEST_20240710_033600:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Tue 09-Ju", "deviceSupportLevel": "Supported", "dnsResolvedManagementAddress": "204.1.2.2", "family": "Switches and Hubs", "hostname": "sjc_border.cisco.com", "interfaceCount": "0", "inventoryStatusDetail": "<status><general code='SYNC'/></status>", "lastDeviceResyncStartTime": "2024-08-08 12:27:42", "lastManagedResyncReasons": "Periodic", "lastUpdateTime": 1723089164674, "lastUpdated": "2024-08-08 03:52:44", "lineCardCount": "0", "lineCardId": "", "macAddress": "dc:f7:19:33:41:00", "managedAtleastOnce": false, "managementIpAddress": "204.1.2.2", "managementState": "Managed", "memorySize": "NA", "paddedMgmtIpAddress": "204.  1.  2.  2", "pendingSyncRequestsCount": "1", "platformId": "C9300-24UX", "reachabilityFailureReason": "", "reachabilityStatus": "Reachable", "reasonsForDeviceResync": "Application Requested", "reasonsForPendingSyncRequests": "Application Requested", "role": "DISTRIBUTION", "roleSource": "AUTO", "serialNumber": "FOC2225U12L", "series": "Cisco Catalyst 9300 Series Switches", "snmpContact": "", "snmpLocation": "", "softwareType": "IOS-XE", "softwareVersion": "17.16.20240710:041147", "syncRequestedByApp": "SWIM", "tagCount": "0", "type": "Cisco Catalyst 9300 Switch", "upTime": "18 days, 6:08:51.84", "uptimeSeconds": 1608179, "vendor": "Cisco"}, {"instanceUuid": "6cae0779-a144-4208-a0f8-4eaca1542d61", "instanceTenantId": "6663114d388b29001399e46a", "deployPending": "NONE", "instanceVersion": 0, "apManagerInterfaceIp": "", "associatedWlcIp": "", "bootDateTime": "2024-07-22 03:40:02", "collectionInterval": "Global Default", "collectionIntervalValue": "24:00:00", "collectionStatus": "Managed", "collectionTier": "Not Applicable", "description": "Cisco IOS Software [IOSXE], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.15.20240713:010153 [BLD_V1715_THROTTLE_LATEST_20240713_002204:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Fri 12", "deviceSupportLevel": "Supported", "dnsResolvedManagementAddress": "204.1.2.4", "family": "Switches and Hubs", "hostname": "RMA_SJC_EDGE2.cisco.com", "interfaceCount": "0", "inventoryStatusDetail": "<status><general code='SUCCESS'/></status>", "lastDeviceResyncStartTime": "2024-08-08 03:52:09", "lastManagedResyncReasons": "Periodic", "lastUpdateTime": 1723089182511, "lastUpdated": "2024-08-08 03:53:02", "lineCardCount": "0", "lineCardId": "", "macAddress": "00:50:56:b4:71:6e", "managedAtleastOnce": false, "managementIpAddress": "204.1.2.4", "managementState": "Managed", "memorySize": "NA", "paddedMgmtIpAddress": "204.  1.  2.  4", "pendingSyncRequestsCount": "0", "platformId": "C9KV-UADP-8P", "reachabilityFailureReason": "", "reachabilityStatus": "Reachable", "reasonsForDeviceResync": "Periodic", "reasonsForPendingSyncRequests": "", "role": "ACCESS", "roleSource": "AUTO", "serialNumber": "9X8X6SWXCLM", "series": "Cisco Catalyst 9000 Series Virtual Switches", "snmpContact": "", "snmpLocation": "", "softwareType": "IOS-XE", "softwareVersion": "17.15.20240713:010153", "syncRequestedByApp": "", "tagCount": "0", "type": "Cisco Catalyst 9000 UADP 8 Port Virtual Switch", "upTime": "17 days, 0:13:34.00", "uptimeSeconds": 1500462, "vendor": "Cisco"}, {"instanceUuid": "ec0b4a9e-fc6e-4ffe-86bc-955b3940578a", "instanceTenantId": "6663114d388b29001399e46a", "deployPending": "NONE", "instanceVersion": 0, "apManagerInterfaceIp": "", "associatedWlcIp": "", "bootDateTime": "2024-07-22 03:39:56", "collectionInterval": "Global Default", "collectionIntervalValue": "24:00:00", "collectionStatus": "Managed", "collectionTier": "Not Applicable", "description": "Cisco IOS Software [IOSXE], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.15.20240612:011957 [BLD_V1715_THROTTLE_LATEST_20240612_002610:/nobackup/mcpre/s2c-build-ws 101] Copyright (c) 1986-2024 by Cisco Systems, Inc. Compiled Tue 11", "deviceSupportLevel": "Supported", "dnsResolvedManagementAddress": "204.1.2.3", "family": "Switches and Hubs", "hostname": "SJ_Edge1", "interfaceCount": "0", "inventoryStatusDetail": "<status><general code='SUCCESS'/></status>", "lastDeviceResyncStartTime": "2024-08-08 03:52:09", "lastManagedResyncReasons": "Periodic", "lastUpdateTime": 1723089176947, "lastUpdated": "2024-08-08 03:52:56", "lineCardCount": "0", "lineCardId": "", "macAddress": "00:50:56:b4:ff:2a", "managedAtleastOnce": false, "managementIpAddress": "204.1.2.3", "managementState": "Managed", "memorySize": "NA", "paddedMgmtIpAddress": "204.  1.  2.  3", "pendingSyncRequestsCount": "0", "platformId": "C9KV-UADP-8P", "reachabilityFailureReason": "", "reachabilityStatus": "Reachable", "reasonsForDeviceResync": "Periodic", "reasonsForPendingSyncRequests": "", "role": "ACCESS", "roleSource": "AUTO", "serialNumber": "99IA669OFH1", "series": "Cisco Catalyst 9000 Series Virtual Switches", "snmpContact": "", "snmpLocation": "", "softwareType": "IOS-XE", "softwareVersion": "17.15.20240612:011957", "syncRequestedByApp": "", "tagCount": "0", "type": "Cisco Catalyst 9000 UADP 8 Port Virtual Switch", "upTime": "17 days, 0:13:29.00", "uptimeSeconds": 1500467, "vendor": "Cisco"}], "version": "1.0", "siteId": "d5f8d954-0bc9-49a9-a24c-b3f05a01d31e"}, {"response": [], "version": "1.0", "siteId": "09f1dc00-6d7f-4d0c-b8b5-cdd6cd6dc7d7", "message": "Site doesn’t not have device member with given device family or serial number as input"}, {"response": [], "version": "1.0", "siteId": "847b187b-6827-4a07-8d46-16d69f6e0389", "message": "Site doesn’t not have device member with given device family or serial number as input"}, {"response": [], "version": "1.0", "siteId": "0985a6ec-ae46-4033-be6e-db9379c036c8", "message": "Site doesn’t not have device member with given device family or serial number as input"}, {"response": [], "version": "1.0", "siteId": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "message": "Site doesn’t not have device member with given device family or serial number as input"}]
+    },
+    "trigger_software_image_activation": {
+        "response": {
+            "taskId": "019131f5-9bf1-7650-bf39-076e1e500f4a",
+            "url": "/api/v1/task/019131f5-9bf1-7650-bf39-076e1e500f4a"
+        },
+        "version": "1.0"
+    },
+    "task_3_details": {
+        "response": {"startTime": 1723120065521, "data": "activate", "progress": "image activation", "version": 1723120073490, "lastUpdate": 1723120073490, "serviceType": "Swim Service", "isError": false, "instanceTenantId": "6663114d388b29001399e46a", "id": "019131f5-9bf1-7650-bf39-076e1e500f4a"}, "version": "1.0"
+    },
+    "task_4_details": {
+        "response": {
+            "startTime": 1723120065521,
+            "data": "activate",
+            "endTime": 1723120074081,
+            "progress": "Success = 0, Failure = 1, Running = 0, Pending = 0, Total = 1",
+            "version": 1723120074081,
+            "errorCode": "100",
+            "lastUpdate": 1723120073490,
+            "serviceType": "Swim Service",
+            "isError": true,
+            "instanceTenantId": "6663114d388b29001399e46a",
+            "id": "019131f5-9bf1-7650-bf39-076e1e500f4a"
+        },
+        "version": "1.0"
+    },
+    "playbook_config_invalid_param_import_image_url_tag_golden_load_response": {
+        "message": "Activation for Image with Id '4a3cccfa-dc92-4fad-a7d3-c59876cbebe6' gets failed"
+    },
+    "playbook_untag_image_as_golden_and_load_on_device": [
+        {
+          "tagging_details": {
+            "image_name": "cat9k_iosxe.17.12.02.SPA.bin",
+            "device_role": "ALL",
+            "device_image_family_name": "Cisco Catalyst 9000 UADP 8 Port Virtual Switch",
+            "site_name" :"Global/LTTS",
+            "tagging": false
+          }
+        }]
+    ,
+    "get_2_software_image_details": {"response": [{"imageUuid": "4a3cccfa-dc92-4fad-a7d3-c59876cbebe6", "name": "cat9k_iosxe.17.12.02.SPA.bin", "family": "CAT9K", "version": "17.12.02.0.2739", "displayVersion": "17.12.02", "md5Checksum": "2405eeb2627eeee594078b6019a2d936", "shaCheckSum": "457d3bc8240bcb18066c56051a5085d6cdaea5d0cc9df6ca615b2db84abe7672a29d1c3c6eaa784b487ff812847948bbdf3107d226feb96844fe54d0ba873c4c", "createdTime": "2024-08-08 12:27:18.0", "imageType": "SYSTEM_SW", "fileSize": "1316755714 bytes", "imageName": "cat9k_iosxe.17.12.02.SPA.bin", "applicationType": "", "feature": "", "fileServiceId": "e6ff4ee1-1e8a-459d-b488-b555e5e31e72", "isTaggedGolden": true, "imageSource": "http://172.21.236.183/swim/V1712_2_CCO/cat9k_iosxe.17.12.02.SPA.bin", "extendedAttributes": {"Description": "Cisco IOS Software, IOS-XE Software", "BOOTROM": "UNKNOWN", "MINFLASHSIZE": "UNKNOWN", "MEDIA": "5", "FULL_VERSION": "17.12.02.0.2739", "DEFAULT_BOOTROM": "UNKNOWN", "DEFAULT_RAM": "UNKNOWN", "GAIA_FEATURE": "UNKNOWN", "COMPRESSION_CODE": "-1", "DEFAULT_MINFLASHSIZE": "UNKNOWN", "RAM": "UNKNOWN"}, "vendor": "CISCO", "imageIntegrityStatus": "UNKNOWN", "importSourceType": "REMOTEURL"}], "version": "1.0"},
+    "get_2_site": {"response": [{"parentId": "0ceaa46f-e64b-448b-a01c-1c100c9b134b", "name": "LTTS", "additionalInfo": [{"nameSpace": "Location", "attributes": {"country": "India", "latitude": "37.23", "addressInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "type": "building", "longitude": "180"}}], "instanceTenantId": "6663114d388b29001399e46a", "id": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "siteHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/f41654c0-d03b-40ad-a3ae-4318ee2821d6", "siteNameHierarchy": "Global/LTTS"}]},
+    "get_2_device_family_identifiers": {"response": [{"deviceFamily": "Cisco Catalyst 9000 UADP 8 Port Virtual Switch", "deviceFamilyIdentifier": "999999901"}, {"deviceFamily": "Cisco Catalyst 8000V Edge Software", "deviceFamilyIdentifier": "286327102"}, {"deviceFamily": "Cisco Catalyst 9300 Switch", "deviceFamilyIdentifier": "286315874"}], "version": "1.0"},
+    "get_software_image_details_1": {"response": [{"imageUuid": "4a3cccfa-dc92-4fad-a7d3-c59876cbebe6", "name": "cat9k_iosxe.17.12.02.SPA.bin", "family": "CAT9K", "version": "17.12.02.0.2739", "displayVersion": "17.12.02", "md5Checksum": "2405eeb2627eeee594078b6019a2d936", "shaCheckSum": "457d3bc8240bcb18066c56051a5085d6cdaea5d0cc9df6ca615b2db84abe7672a29d1c3c6eaa784b487ff812847948bbdf3107d226feb96844fe54d0ba873c4c", "createdTime": "2024-08-08 12:27:18.0", "imageType": "SYSTEM_SW", "fileSize": "1316755714 bytes", "imageName": "cat9k_iosxe.17.12.02.SPA.bin", "applicationType": "", "feature": "", "fileServiceId": "e6ff4ee1-1e8a-459d-b488-b555e5e31e72", "isTaggedGolden": true, "imageSource": "http://172.21.236.183/swim/V1712_2_CCO/cat9k_iosxe.17.12.02.SPA.bin", "extendedAttributes": {"Description": "Cisco IOS Software, IOS-XE Software", "BOOTROM": "UNKNOWN", "MINFLASHSIZE": "UNKNOWN", "MEDIA": "5", "FULL_VERSION": "17.12.02.0.2739", "DEFAULT_BOOTROM": "UNKNOWN", "DEFAULT_RAM": "UNKNOWN", "GAIA_FEATURE": "UNKNOWN", "COMPRESSION_CODE": "-1", "DEFAULT_MINFLASHSIZE": "UNKNOWN", "RAM": "UNKNOWN"}, "vendor": "CISCO", "imageIntegrityStatus": "UNKNOWN", "importSourceType": "REMOTEURL"}], "version": "1.0"},
+    "get_2_golden_tag_status_of_an_image": {"response": {"deviceRole": "ALL", "inheritedSiteName": null, "inheritedSiteId": null, "taggedGolden": true}, "version": "1.0"},
+    "remove_golden_tag_for_image": {"response": {"taskId": "01913216-f40f-7c85-a0bb-dc4f3e9f30b2", "url": "/api/v1/task/01913216-f40f-7c85-a0bb-dc4f3e9f30b2"}, "version": "1.0"},
+    "Task_details": {"response": {"startTime": 1723122250767, "data": "Golden-Tagging", "endTime": 1723122250876, "progress": "Untagging of image  cat9k_iosxe.17.12.02.SPA.bin for site  LTTS for family Cisco Catalyst 9000 UADP 8 Port Virtual Switch  for device deviceTag ALL successful.", "version": 1723122250876, "serviceType": "NCSW", "isError": false, "instanceTenantId": "6663114d388b29001399e46a", "id": "01913216-f40f-7c85-a0bb-dc4f3e9f30b2"}, "version": "1.0"},
+    "get_software_image_details_2": {"response": [{"imageUuid": "4a3cccfa-dc92-4fad-a7d3-c59876cbebe6", "name": "cat9k_iosxe.17.12.02.SPA.bin", "family": "CAT9K", "version": "17.12.02.0.2739", "displayVersion": "17.12.02", "md5Checksum": "2405eeb2627eeee594078b6019a2d936", "shaCheckSum": "457d3bc8240bcb18066c56051a5085d6cdaea5d0cc9df6ca615b2db84abe7672a29d1c3c6eaa784b487ff812847948bbdf3107d226feb96844fe54d0ba873c4c", "createdTime": "2024-08-08 12:27:18.0", "imageType": "SYSTEM_SW", "fileSize": "1316755714 bytes", "imageName": "cat9k_iosxe.17.12.02.SPA.bin", "applicationType": "", "feature": "", "fileServiceId": "e6ff4ee1-1e8a-459d-b488-b555e5e31e72", "isTaggedGolden": true, "imageSource": "http://172.21.236.183/swim/V1712_2_CCO/cat9k_iosxe.17.12.02.SPA.bin", "extendedAttributes": {"Description": "Cisco IOS Software, IOS-XE Software", "BOOTROM": "UNKNOWN", "MINFLASHSIZE": "UNKNOWN", "MEDIA": "5", "FULL_VERSION": "17.12.02.0.2739", "DEFAULT_BOOTROM": "UNKNOWN", "DEFAULT_RAM": "UNKNOWN", "GAIA_FEATURE": "UNKNOWN", "COMPRESSION_CODE": "-1", "DEFAULT_MINFLASHSIZE": "UNKNOWN", "RAM": "UNKNOWN"}, "vendor": "CISCO", "imageIntegrityStatus": "UNKNOWN", "importSourceType": "REMOTEURL"}], "version": "1.0"},
+    "get_site_1": {"response": [{"parentId": "0ceaa46f-e64b-448b-a01c-1c100c9b134b", "name": "LTTS", "additionalInfo": [{"nameSpace": "Location", "attributes": {"country": "India", "latitude": "37.23", "addressInheritedFrom": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "type": "building", "longitude": "180"}}], "instanceTenantId": "6663114d388b29001399e46a", "id": "f41654c0-d03b-40ad-a3ae-4318ee2821d6", "siteHierarchy": "0ceaa46f-e64b-448b-a01c-1c100c9b134b/f41654c0-d03b-40ad-a3ae-4318ee2821d6", "siteNameHierarchy": "Global/LTTS"}]},
+    "get_device_family_identifiers_1": {"response": [{"deviceFamily": "Cisco Catalyst 8000V Edge Software", "deviceFamilyIdentifier": "286327102"}, {"deviceFamily": "Cisco Catalyst 9300 Switch", "deviceFamilyIdentifier": "286315874"}, {"deviceFamily": "Cisco Catalyst 9000 UADP 8 Port Virtual Switch", "deviceFamilyIdentifier": "999999901"}], "version": "1.0"},
+    "get_software_image_details_3": {"response": [{"imageUuid": "4a3cccfa-dc92-4fad-a7d3-c59876cbebe6", "name": "cat9k_iosxe.17.12.02.SPA.bin", "family": "CAT9K", "version": "17.12.02.0.2739", "displayVersion": "17.12.02", "md5Checksum": "2405eeb2627eeee594078b6019a2d936", "shaCheckSum": "457d3bc8240bcb18066c56051a5085d6cdaea5d0cc9df6ca615b2db84abe7672a29d1c3c6eaa784b487ff812847948bbdf3107d226feb96844fe54d0ba873c4c", "createdTime": "2024-08-08 12:27:18.0", "imageType": "SYSTEM_SW", "fileSize": "1316755714 bytes", "imageName": "cat9k_iosxe.17.12.02.SPA.bin", "applicationType": "", "feature": "", "fileServiceId": "e6ff4ee1-1e8a-459d-b488-b555e5e31e72", "isTaggedGolden": true, "imageSource": "http://172.21.236.183/swim/V1712_2_CCO/cat9k_iosxe.17.12.02.SPA.bin", "extendedAttributes": {"Description": "Cisco IOS Software, IOS-XE Software", "BOOTROM": "UNKNOWN", "MINFLASHSIZE": "UNKNOWN", "MEDIA": "5", "FULL_VERSION": "17.12.02.0.2739", "DEFAULT_BOOTROM": "UNKNOWN", "DEFAULT_RAM": "UNKNOWN", "GAIA_FEATURE": "UNKNOWN", "COMPRESSION_CODE": "-1", "DEFAULT_MINFLASHSIZE": "UNKNOWN", "RAM": "UNKNOWN"}, "vendor": "CISCO", "imageIntegrityStatus": "UNKNOWN", "importSourceType": "REMOTEURL"}], "version": "1.0"},
+    "get_golden_tag_status_of_an_image_1": {"response": {"deviceRole": "ALL", "inheritedSiteName": null, "inheritedSiteId": null, "taggedGolden": false}, "version": "1.0"},
+
+   
+   "untag_image_as_golden_and_load_on_device_responce":{
+    "message": "Untagging of image  cat9k_iosxe.17.12.02.SPA.bin for site  LTTS for family Cisco Catalyst 9000 UADP 8 Port Virtual Switch  for device deviceTag ALL successful."
+}
+}
