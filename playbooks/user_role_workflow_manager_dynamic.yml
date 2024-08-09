@@ -20,7 +20,7 @@
         config_verify: True
         dnac_api_task_timeout: 1000
         dnac_task_poll_interval: 1
-        state: deleted
+        state: merged
         config:
           user_details:
             - first_name: "ajith"
@@ -34,14 +34,14 @@
               username: "syedkhadeer"
               email: "syedkhadeer@example.com"
               password: "Syedkhadeer@123"
-          # role_details:
-          #   - role_name: "Test_Role_1"
-          #     description: "Default role creation"
-          #     assurance:
-          #       - overall: "read"
-          #         troubleshooting_tools: "read"
-          #     network_analytics:
-          #       - overall: "deny"
+          role_details:
+            - role_name: "Test_Role_1"
+              description: "Default role creation"
+              assurance:
+                - overall: "read"
+                  troubleshooting_tools: "read"
+              network_analytics:
+                - overall: "deny"
           #   - role_name: "Test_Role_2"
           #     description: "Default"
           #     network_design:

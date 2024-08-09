@@ -894,6 +894,11 @@ class UserandRole(DnacBase):
                 }
             }
         }
+        self.versions_functions_params = {
+            'unchanged_functions_params': {
+
+            }
+        }
 
     def validate_input_yml(self, user_role_details):
         """
@@ -1444,9 +1449,11 @@ class UserandRole(DnacBase):
         try:
             self.log("Create user with user_info_params: {0}".format(str(user_params)), "DEBUG")
             version_route_function = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "add_user")
+
             if version_route_function is None:
                 error_message = "The specified version '{0}' does not have the 'add_user' functionality.".format(self.payload.get("dnac_version"))
                 return {"error": error_message}
+
             response = self.dnac._exec(
                 family="user_and_roles",
                 function=version_route_function,

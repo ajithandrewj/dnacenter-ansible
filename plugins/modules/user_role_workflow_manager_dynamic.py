@@ -1102,34 +1102,44 @@ class UserandRole(DnacBase):
         return self
 
     def version_route(self, version, family, key):
-
         version_formatted = version.replace('.', '_')
         module_path = "dnacentersdk.api.v{}.{}".format(version_formatted, family)
 
         module = importlib.import_module(module_path)
-
+        
         class_names = []
         class_functions = []
-        matching_functions = []
+        matching_function = []
+        function_parameters = None
 
+        # Get all class names
         for name, obj in inspect.getmembers(module, inspect.isclass):
             if obj.__module__ == module.__name__:
                 class_names.append(name)
 
+        # Get the first class from the list
         module_class = getattr(module, class_names[0])
 
+        # Get all functions from the class
         for name, obj in inspect.getmembers(module_class, inspect.isfunction):
             if obj.__module__ == module_class.__module__:
                 class_functions.append(name)
 
-        for calss_function in class_functions:
-            if key in calss_function:
-                matching_functions.append(calss_function)
+        # Match the function based on the key
+        for class_function in class_functions:
+            if key in class_function:
+                matching_function.append(class_function)
 
-        if matching_functions:
-            if matching_functions[0] == "__init__":
-                return None
-            return matching_functions[0]
+        # Get parameters of the matching function
+        if matching_function:
+            func_name = matching_function[0]
+            func_obj = getattr(module_class, func_name)
+            sig = inspect.signature(func_obj)
+            function_parameters = sig.parameters
+
+            return func_name, function_parameters
+
+        return None, None
 
     def get_want(self, config):
         """
@@ -1429,23 +1439,42 @@ class UserandRole(DnacBase):
             - Logs the provided user parameters and the received API response.
             - Returns the API response from the "create_user" function.
         """
+        required_keys = ['username', 'password']
+        missing_keys = []
+        mapped_params = {}
+
+        self.log("Create user with user_params: {0}".format(str(user_params)), "DEBUG")
+        function_called, function_parameters = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "add_user")
+
+        if function_called is None:
+            error_message = "The specified version '{0}' does not have the 'add_user' functionality.".format(self.payload.get("dnac_version"))
+            return {"error": error_message}
+
+        if function_parameters is None:
+            error_message = "Please provide a valid function name."
+            return {"error": error_message}
+
+        for param_name in function_parameters:
+            if param_name in user_params:
+                mapped_params[param_name] = user_params[param_name]
+
+        self.log("Check if each required key is present in the mapped_params dictionary...", "DEBUG")
+        for key in required_keys:
+            if key not in mapped_params:
+                missing_keys.append(key)
+
         try:
-            self.log("Create user with user_info_params: {0}".format(str(user_params)), "DEBUG")
-            version_route_function = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "add_user")
-            if version_route_function is None:
-                error_message = "The specified version '{0}' does not have the 'add_user' functionality.".format(self.payload.get("dnac_version"))
-                return {"error": error_message}
             response = self.dnac._exec(
                 family="user_and_roles",
-                function=version_route_function,
+                function=function_called,
                 op_modifies=True,
-                params=user_params,
+                params=mapped_params,
             )
             self.log("Received API response from create_user: {0}".format(str(response)), "DEBUG")
             return response
 
         except Exception:
-            error_message = "Mandatory field not present: An error occurred while creating the user"
+            error_message = "Mandatory parameter(s) {0} not present in the user details".format(", ".join(missing_keys))
             return {"error": error_message}
 
     def create_role(self, role_params):
@@ -1462,17 +1491,28 @@ class UserandRole(DnacBase):
             - Logs the provided role parameters and the received API response.
             - Returns the API response from the "create_role" function.
         """
+        mapped_params = {}
+        self.log("Create role with role_info_params: {0}".format(str(role_params)), "DEBUG")
+        function_called, function_parameters  = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "add_role")
+
+        if function_called is None:
+            error_message = "The specified version '{0}' does not have the 'add_role' functionality.".format(self.payload.get("dnac_version"))
+            return {"error": error_message}
+
+        if function_parameters is None:
+            error_message = "Please provide a valid function name."
+            return {"error": error_message}
+
+        for param_name in function_parameters:
+            if param_name in role_params:
+                mapped_params[param_name] = role_params[param_name]
+
         try:
-            self.log("Create role with role_info_params: {0}".format(str(role_params)), "DEBUG")
-            version_route_function = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "add_role")
-            if version_route_function is None:
-                error_message = "The specified version '{0}' does not have the 'add_role' functionality.".format(self.payload.get("dnac_version"))
-                return {"error": error_message}
             response = self.dnac._exec(
                 family="user_and_roles",
-                function=version_route_function,
+                function=function_called,
                 op_modifies=True,
-                params=role_params,
+                params=mapped_params,
             )
             self.log("Received API response from create_role: {0}".format(str(response)), "DEBUG")
             return response
@@ -1493,13 +1533,15 @@ class UserandRole(DnacBase):
               and "get_users_ap_i" function.
             - Logs the received API response and returns it.
         """
-        version_route_function = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "get_users")
-        if version_route_function is None:
+        function_called, function_parameters = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "get_users")
+
+        if function_called is None:
             error_message = "The specified version '{0}' does not have the 'get_users' functionality.".format(self.payload.get("dnac_version"))
             return {"error": error_message}
+
         response = self.dnac._exec(
             family="user_and_roles",
-            function=version_route_function,
+            function=function_called,
             op_modifies=True,
             params={"invoke_source": "external"},
         )
@@ -1518,13 +1560,15 @@ class UserandRole(DnacBase):
               and "get_roles_ap_i" function.
             - Logs the received API response and returns it.
         """
-        version_route_function = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "get_roles")
-        if version_route_function is None:
+        function_called, function_parameters = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "get_roles")
+
+        if function_called is None:
             error_message = "The specified version '{0}' does not have the 'get_roles' functionality.".format(self.payload.get("dnac_version"))
             return {"error": error_message}
+
         response = self.dnac._exec(
             family="user_and_roles",
-            function=version_route_function,
+            function=function_called,
             op_modifies=True,
         )
         self.log("Received API response from get_roles_api: {0}".format(str(response)), "DEBUG")
@@ -2412,14 +2456,25 @@ class UserandRole(DnacBase):
             - This method sends a request to update a user in Cisco Catalyst Center using the provided
             - user parameters. It logs the response and returns it.
         """
+        mapped_params = {}
         self.log("Updating user with parameters: {0}".format(user_params), "DEBUG")
-        version_route_function = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "update_user")
-        if version_route_function is None:
+        function_called, function_parameters = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "update_user")
+
+        if function_called is None:
             error_message = "The specified version '{0}' does not have the 'update_user' functionality.".format(self.payload.get("dnac_version"))
             return {"error": error_message}
+
+        if function_parameters is None:
+            error_message = "Please provide a valid function name."
+            return {"error": error_message}
+
+        for param_name in function_parameters:
+            if param_name in user_params:
+                mapped_params[param_name] = user_params[param_name]
+
         response = self.dnac._exec(
             family="user_and_roles",
-            function=version_route_function,
+            function=function_called,
             op_modifies=True,
             params=user_params,
         )
@@ -2441,14 +2496,25 @@ class UserandRole(DnacBase):
               and the "update_role_ap_i" function. The method logs the received API response at the "DEBUG" level and
               finally returns the response.
         """
+        mapped_params = {}
         self.log("Update role with role_info_params: {0}".format(str(role_params)), "DEBUG")
-        version_route_function = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "update_role")
-        if version_route_function is None:
+        function_called, function_parameters = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "update_role")
+
+        if function_called is None:
             error_message = "The specified version '{0}' does not have the 'update_role' functionality.".format(self.payload.get("dnac_version"))
             return {"error": error_message}
+
+        if function_parameters is None:
+            error_message = "Please provide a valid function name."
+            return {"error": error_message}
+
+        for param_name in function_parameters:
+            if param_name in role_params:
+                mapped_params[param_name] = role_params[param_name]
+
         response = self.dnac._exec(
             family="user_and_roles",
-            function=version_route_function,
+            function=function_called,
             op_modifies=True,
             params=role_params,
         )
@@ -2809,14 +2875,25 @@ class UserandRole(DnacBase):
             - It logs the response and returns it.
             - The function uses the "user_and_roles" family and the "delete_user_ap_i" function from the Cisco Catalyst Center API.
         """
+        mapped_params = {}
         self.log("delete user with user_params: {0}".format(str(user_params)), "DEBUG")
-        version_route_function = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "delete_user")
-        if version_route_function is None:
+        function_called, function_parameters = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "delete_user")
+
+        if function_called is None:
             error_message = "The specified version '{0}' does not have the 'delete_user' functionality.".format(self.payload.get("dnac_version"))
             return {"error": error_message}
+
+        if function_parameters is None:
+            error_message = "Please provide a valid function name."
+            return {"error": error_message}
+
+        for param_name in function_parameters:
+            if param_name in user_params:
+                mapped_params[param_name] = user_params[param_name]
+
         response = self.dnac._exec(
             family="user_and_roles",
-            function=version_route_function,
+            function=function_called,
             op_modifies=True,
             params=user_params,
         )
@@ -2836,15 +2913,26 @@ class UserandRole(DnacBase):
             - It logs the response and returns it.
             - The function uses the "user_and_roles" family and the "delete_role_ap_i" function from the Cisco Catalyst Center API.
         """
+        mapped_params = {}
+        self.log("delete role with role_params: {0}".format(str(role_params)), "DEBUG")
+        function_called, function_parameters = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "delete_role")
+
+        if function_called is None:
+            error_message = "The specified version '{0}' does not have the 'delete_role' functionality.".format(self.payload.get("dnac_version"))
+            return {"error": error_message}
+
+        if function_parameters is None:
+            error_message = "Please provide a valid function name."
+            return {"error": error_message}
+
+        for param_name in function_parameters:
+            if param_name in role_params:
+                mapped_params[param_name] = role_params[param_name]
+
         try:
-            self.log("delete role with role_params: {0}".format(str(role_params)), "DEBUG")
-            version_route_function = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "delete_role")
-            if version_route_function is None:
-                error_message = "The specified version '{0}' does not have the 'delete_role' functionality.".format(self.payload.get("dnac_version"))
-                return {"error": error_message}
             response = self.dnac._exec(
                 family="user_and_roles",
-                function=version_route_function,
+                function=function_called,
                 op_modifies=True,
                 params=role_params,
             )
