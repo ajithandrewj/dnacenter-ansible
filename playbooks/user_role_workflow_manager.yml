@@ -7,7 +7,7 @@
   gather_facts: no
   tasks:
     - name: User and Role Workflow Manager
-      cisco.dnac.user_role_workflow_manager_static:
+      cisco.dnac.user_role_workflow_manager:
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
         dnac_password: "{{dnac_password}}"

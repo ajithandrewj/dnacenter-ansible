@@ -896,7 +896,7 @@ class UserandRole(DnacBase):
         }
         self.versions_functions_params = {
             'unchanged_functions_params': {
-
+                
             }
         }
 
