@@ -888,15 +888,26 @@ class UserandRole(DnacBase):
                     'get_external_authentication_setting': 'get_external_authentication_setting_ap_i',
                     'manage_external_authentication_setting': 'manage_external_authentication_setting_ap_i',
                     'get_external_authentication_servers': 'get_external_authentication_servers_ap_i',
-                    'add_and_update_aa_attribute': 'add_and_update_a_a_attribute_ap_i',
-                    'delete_aa_attribute': 'delete_a_a_attribute_ap_i',
-                    'get_aa_attribute': 'get_a_a_attribute_ap_i'
+                    'add_and_update_a_a_a_attribute': 'add_and_update_a_a_a_attribute_ap_i',
+                    'delete_a_a_a_attribute': 'delete_a_a_a_attribute_ap_i',
+                    'get_a_a_a_attribute': 'get_a_a_a_attribute_ap_i'
                 }
             }
         }
         self.versions_functions_params = {
             'unchanged_functions_params': {
-                
+                'get_users': {"invoke_source": "external"},
+                'add_user': {'email': None, 'firstName': None, 'lastName': None, 'password': None, 'roleList': None, 'username': None},
+                'update_user': {'email': None, 'firstName': None, 'lastName': None, 'userId': None, 'roleList': None, 'username': None},
+                'get_external_authentication_servers': {"invoke_source": "external"}
+            },
+            '2.3.7.6': {
+                'add_role': {'description': None, 'resourceTypes': None, 'role': None},
+                'update_role': {'description': None, 'resourceTypes': None, 'roleId': None},
+                'delete_role': {'roleId': None},
+                'delete_user': {'user_id': None},
+                'manage_external_authentication_setting': {'enable': None},
+                'add_and_update_a_a_a_attribute': {'attributeName': None},
             }
         }
 
@@ -1446,14 +1457,14 @@ class UserandRole(DnacBase):
             - Logs the provided user parameters and the received API response.
             - Returns the API response from the "create_user" function.
         """
+        self.log("Create user with user_info_params: {0}".format(str(user_params)), "DEBUG")
+        version_route_function = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "add_user")
+
+        if version_route_function is None:
+            error_message = "The specified version '{0}' does not have the 'add_user' functionality.".format(self.payload.get("dnac_version"))
+            return {"error": error_message}
+
         try:
-            self.log("Create user with user_info_params: {0}".format(str(user_params)), "DEBUG")
-            version_route_function = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "add_user")
-
-            if version_route_function is None:
-                error_message = "The specified version '{0}' does not have the 'add_user' functionality.".format(self.payload.get("dnac_version"))
-                return {"error": error_message}
-
             response = self.dnac._exec(
                 family="user_and_roles",
                 function=version_route_function,
