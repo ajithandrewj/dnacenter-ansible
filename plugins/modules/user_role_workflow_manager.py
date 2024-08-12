@@ -439,14 +439,14 @@ options:
                 default: "read"
                 type: str
 requirements:
-  - dnacentersdk >= 2.7.1
+  - dnacentersdk >= 2.7.2
   - python >= 3.9.19
 notes:
   - SDK Methods used
-    - user_and_roles.UserandRoles.get_user_ap_i
-    - user_and_roles.UserandRoles.add_user_ap_i
-    - user_and_roles.UserandRoles.update_user_ap_i
-    - user_and_roles.UserandRoles.delete_user_ap_i
+    - user_and_roles.UserandRoles.get_user_api
+    - user_and_roles.UserandRoles.add_user_api
+    - user_and_roles.UserandRoles.update_user_api
+    - user_and_roles.UserandRoles.delete_user_api
   - Paths used
     - get /dna/system/api/v1/user
     - post /dna/system/api/v1/user
@@ -1381,9 +1381,9 @@ class UserandRole(DnacBase):
 
         Description:
             - Checks the existence of a user and retrieves user details in Cisco Catalyst Center
-              by querying the "get_users_ap_i" function in the "user_and_roles" family.
+              by querying the "get_users_api" function in the "user_and_roles" family.
             - Checks the existence of a role and retrieves role details in Cisco Catalyst Center
-              by querying the "get_roles_ap_i" function in the "user_and_roles" family.
+              by querying the "get_roles_api" function in the "user_and_roles" family.
             - Logs errors if required parameters are missing in the playbook config.
         """
         user_exists = False
@@ -1453,7 +1453,7 @@ class UserandRole(DnacBase):
             - response (dict): The API response from the "create_user" function.
         Description:
             - Sends a request to create a new user in Cisco Catalyst Center using the provided user parameters.
-            - Uses the "user_and_roles" family and "add_user_ap_i" function for the API call.
+            - Uses the "user_and_roles" family and "add_user_api" function for the API call.
             - Logs the provided user parameters and the received API response.
             - Returns the API response from the "create_user" function.
         """
@@ -1488,7 +1488,7 @@ class UserandRole(DnacBase):
             - response (dict): The API response from the "create_role" function.
         Description:
             - Sends a request to create a new role in Cisco Catalyst Center using the provided role parameters.
-            - Utilizes the "user_and_roles" family and "add_role_ap_i" function for the API request.
+            - Utilizes the "user_and_roles" family and "add_role_api" function for the API request.
             - Logs the provided role parameters and the received API response.
             - Returns the API response from the "create_role" function.
         """
@@ -1520,7 +1520,7 @@ class UserandRole(DnacBase):
             - response (dict): The API response from the "get_users_api" function.
         Description:
             - Sends a request to retrieve users from Cisco Catalyst Center using the "user_and_roles" family
-              and "get_users_ap_i" function.
+              and "get_users_api" function.
             - Logs the received API response and returns it.
         """
         version_route_function = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "get_users")
@@ -1545,7 +1545,7 @@ class UserandRole(DnacBase):
             - response (dict): The API response from the "get_roles" function.
         Description:
             - Sends a request to retrieve roles from Cisco Catalyst Center using the "user_and_roles" family
-              and "get_roles_ap_i" function.
+              and "get_roles_api" function.
             - Logs the received API response and returns it.
         """
         version_route_function = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "get_roles")
@@ -2468,7 +2468,7 @@ class UserandRole(DnacBase):
             - This method sends a request to update a role in Cisco Catalyst Center using the provided
               role parameters. It first logs the role parameters at the "DEBUG" level. Then it calls the"_exec" method
               of the "dnac" object to perform the API request. The API request is specified with the "user_and_roles" family
-              and the "update_role_ap_i" function. The method logs the received API response at the "DEBUG" level and
+              and the "update_role_api" function. The method logs the received API response at the "DEBUG" level and
               finally returns the response.
         """
         self.log("Update role with role_info_params: {0}".format(str(role_params)), "DEBUG")
@@ -2837,7 +2837,7 @@ class UserandRole(DnacBase):
         Description:
             - This method sends a request to delete a user in Cisco Catalyst Center using the provided user parameters.
             - It logs the response and returns it.
-            - The function uses the "user_and_roles" family and the "delete_user_ap_i" function from the Cisco Catalyst Center API.
+            - The function uses the "user_and_roles" family and the "delete_user_api" function from the Cisco Catalyst Center API.
         """
         self.log("delete user with user_params: {0}".format(str(user_params)), "DEBUG")
         version_route_function = self.version_route(self.payload.get("dnac_version"), 'user_and_roles', "delete_user")
@@ -2864,7 +2864,7 @@ class UserandRole(DnacBase):
         Description:
             - This method sends a request to delete a role in Cisco Catalyst Center using the provided role parameters.
             - It logs the response and returns it.
-            - The function uses the "user_and_roles" family and the "delete_role_ap_i" function from the Cisco Catalyst Center API.
+            - The function uses the "user_and_roles" family and the "delete_role_api" function from the Cisco Catalyst Center API.
         """
         try:
             self.log("delete role with role_params: {0}".format(str(role_params)), "DEBUG")
