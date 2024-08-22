@@ -22,27 +22,37 @@
         dnac_task_poll_interval: 1
         state: merged
         config:
-          user_details:
-            - first_name: "ajith"
-              last_name: "andrew"
-              username: "ajithandrewj"
-              email: "ajith.andrew@example.com"
-              password: "Ajith@123"
-              role_list: ["Super-Admin-role"]
-              gg: "hhh"
-            - first_name: "syed"
-              last_name: "khadeer"
-              username: "syedkhadeer"
-              email: "syedkhadeer@example.com"
-              password: "Syedkhadeer@123"
+          # user_details:
+          #   - first_name: "ajith"
+          #     last_name: "andrew"
+          #     username: "ajithandrewj"
+          #     email: "ajith.andrew@example.com"
+          #     password: "Ajith@123"
+          #     role_list: ["Super-Admin-role"]
+          # role_details:
+          #   - assurance:
+          #     - monitoring_and_troubleshooting: write
+          #       monitoring_settings: read
+          #       # some_random_permission: deny
+          #     description: ''
+          #     network_analytics:
+          #     - data_access: write
+          #     network_design:
+          #     - advanced_network_settings: deny
+          #       virtual_network: read
+          #     network_provision:
+          #     # - some_random_permission: deny
+          #     role_name: ''
+
+
           role_details:
-            - role_name: "Test_Role_1"
-              description: "Default role creation"
+            - role_name: "12345678901234567890123456"
+              description: ""
               assurance:
                 - overall: "read"
                   troubleshooting_tools: "write"
-          #     network_analytics:
-          #       - overall: "deny"
+              network_analytics:
+                - overall: "deny"
           #   - role_name: "Test_Role_2"
           #     description: "Default role creation"
           #     network_design:
