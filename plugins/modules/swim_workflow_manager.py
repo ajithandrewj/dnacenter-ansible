@@ -568,15 +568,36 @@ class Swim(DnacBase):
         site_exists = False
         site_id = None
         response = None
+
         try:
-            response = self.dnac._exec(
-                family="sites",
-                function='get_site',
-                op_modifies=True,
-                params={"name": site_name},
-            )
+            if self.version_2_3_5_3 <= self.dnac_version < self.version_2_3_7_6:
+                response = self.dnac._exec(
+                    family="sites",
+                    function='get_site',
+                    op_modifies=True,
+                    params={"name": site_name},
+                )
         except Exception as e:
-            self.msg = "An exception occurred: Site '{0}' does not exist in the Cisco Catalyst Center".format(site_name)
+            self.msg = (
+                "'An exception occurred: Site '{0}' does not exist in the Cisco Catalyst Center' or 'In this version '{1}'"
+                ", 'get_site' is not supported'".format(site_name, self.payload.get("dnac_version"))
+            )
+            self.log(self.msg, "ERROR")
+            self.module.fail_json(msg=self.msg)
+
+        try:
+            if self.dnac_version >= self.version_2_3_7_6:
+                response = self.dnac._exec(
+                    family="site_design",
+                    function='get_sites',
+                    op_modifies=True,
+                    params={"name": site_name},
+                )
+        except Exception as e:
+            self.msg = (
+                "'An exception occurred: Site '{0}' does not exist in the Cisco Catalyst Center' or 'In this version '{1}'"
+                ", 'get_sites' is not supported'".format(site_name, self.payload.get("dnac_version"))
+            )
             self.log(self.msg, "ERROR")
             self.module.fail_json(msg=self.msg)
 
@@ -624,39 +645,23 @@ class Swim(DnacBase):
         return image_id
 
     def get_cco_image_id(self, cco_image_name):
-        try:
-            self.log("inside get cco image id {0}".format(cco_image_name))
-            response = self.dnac._exec(
-                family="software_image_management_swim",
-                function='returns_list_of_software_images',
-                op_modifies=True,
-            )
-            self.log("Received API response from {0}: {1}".format("returns_list_of_software_images", (response)), "DEBUG")
-            response = response.get("response")
-
-            for image in response:
-                if cco_image_name == image.get("name"):
-                    image_id = image.get("id")
-                    self.log(image_id)
-                    if image_id:
-                        return image_id
-
-            error_message = "Image id cannot be found in cisco.com"
-            self.log(error_message)
-            self.module.fail_json(msg=error_message, response=response)
-        except Exception as e:
-            self.log(e)
-
-    def import_cco_image(self, cco_image_id, function_name):
-        
         response = self.dnac._exec(
             family="software_image_management_swim",
-            function=function_name,
+            function='returns_list_of_software_images',
             op_modifies=True,
-            params=cco_image_id
         )
-        self.log("Received API response from {0}: {1}".format(function_name, str(response)), "DEBUG")
-        return response
+        self.log("Received API response from {0}: {1}".format("returns_list_of_software_images", (response)), "DEBUG")
+        response = response.get("response")
+
+        for image in response:
+            if cco_image_name == image.get("name"):
+                image_id = image.get("id")
+                if image_id:
+                    return image_id
+
+        error_message = "Image id cannot be found in cisco.com"
+        self.log(error_message)
+        self.module.fail_json(msg=error_message, response=response)
 
     def get_image_name_from_id(self, image_id):
         """
@@ -1069,7 +1074,13 @@ class Swim(DnacBase):
             elif want["import_type"] == "local":
                 want["local_import_details"] = config.get("import_image_details").get("local_image_details")
             elif want["import_type"] == "cco":
-                want["cco_import_details"] = config.get("import_image_details").get("cco_image_details")
+                if self.dnac_version >= self.version_2_3_7_6:
+                    want["cco_import_details"] = config.get("import_image_details").get("cco_image_details")
+                else:
+                    self.log("In this version '{0}' CCO based importing is not supported. Only 'local' or 'remote' are supported.".format(
+                        self.dnac_version, "ERROR"))
+                    self.module.fail_json(msg="In this version '{0}' CCO based importing is not supported. Only 'local' or 'remote' are supported.".format(
+                        self.payload.get("dnac_version")))
             else:
                 self.log("The import type '{0}' provided is incorrect. Only 'local' or 'remote' are supported.".format(want["import_type"]), "CRITICAL")
                 self.module.fail_json(msg="Incorrect import type. Supported Values: local or remote")
@@ -1115,15 +1126,11 @@ class Swim(DnacBase):
             elif import_type == "local":
                 image_name = self.want.get("local_import_details").get("file_path")
             else:
-                self.log("inside cco image_name")
                 image_name = self.want.get("cco_import_details").get("image_name")
-                self.log("image_name 1 - {0}".format(image_name))
 
             # Code to check if the image already exists in Catalyst Center
             name = image_name.split('/')[-1]
-            self.log("image_name 2 - {0}".format(name))
             image_exist = self.is_image_exist(name)
-            self.log("image_exist - {0}".format(image_exist))
 
             import_key_mapping = {
                 'source_url': 'sourceURL',
@@ -1175,22 +1182,17 @@ class Swim(DnacBase):
                 import_function = 'import_local_software_image'
             
             else:
-                self.log("inside cco")
                 cco_image_id = self.get_cco_image_id(name)
-                self.log("get_cco_image_type")
-                self.log(cco_image_id)
+                import_params = {"id": cco_image_id}
                 import_function = 'download_the_software_image'
 
-            if self.dnac_version >= self.version_2_3_7_6:
-                response = self.import_cco_image(cco_image_id, import_function)
-            else:
-                response = self.dnac._exec(
-                    family="software_image_management_swim",
-                    function=import_function,
-                    op_modifies=True,
-                    params=import_params,
-                )
-                self.log("Received API response from {0}: {1}".format(import_function, str(response)), "DEBUG")
+            response = self.dnac._exec(
+                family="software_image_management_swim",
+                function=import_function,
+                op_modifies=True,
+                params=import_params,
+            )
+            self.log("Received API response from {0}: {1}".format(import_function, str(response)), "DEBUG")
 
             task_details = {}
             task_id = response.get("response").get("taskId")

@@ -25,7 +25,7 @@
           - import_image_details:
               type: CCO
               cco_image_details:
-                image_name: cat9k_iosxe_npe.17.06.07.SPA.bin
+                image_name: cat9k_iosxe.17.06.06a.SPA.bin
 
       #   - import_image_details:
       #       type: "{{ item.type }}"
