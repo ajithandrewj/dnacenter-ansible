@@ -497,6 +497,9 @@ class Swim(DnacBase):
     def __init__(self, module):
         super().__init__(module)
         self.supported_states = ["merged"]
+        self.payload = module.params
+        self.dnac_version= int(self.payload.get("dnac_version").replace(".", ""))
+        self.version_2_3_5_3, self.version_2_3_7_6 = 2353, 2376
 
     def validate_input(self):
         """
@@ -619,6 +622,41 @@ class Swim(DnacBase):
             self.module.fail_json(msg=error_message, response=image_response)
 
         return image_id
+
+    def get_cco_image_id(self, cco_image_name):
+        try:
+            self.log("inside get cco image id {0}".format(cco_image_name))
+            response = self.dnac._exec(
+                family="software_image_management_swim",
+                function='returns_list_of_software_images',
+                op_modifies=True,
+            )
+            self.log("Received API response from {0}: {1}".format("returns_list_of_software_images", (response)), "DEBUG")
+            response = response.get("response")
+
+            for image in response:
+                if cco_image_name == image.get("name"):
+                    image_id = image.get("id")
+                    self.log(image_id)
+                    if image_id:
+                        return image_id
+
+            error_message = "Image id cannot be found in cisco.com"
+            self.log(error_message)
+            self.module.fail_json(msg=error_message, response=response)
+        except Exception as e:
+            self.log(e)
+
+    def import_cco_image(self, cco_image_id, function_name):
+        
+        response = self.dnac._exec(
+            family="software_image_management_swim",
+            function=function_name,
+            op_modifies=True,
+            params=cco_image_id
+        )
+        self.log("Received API response from {0}: {1}".format(function_name, str(response)), "DEBUG")
+        return response
 
     def get_image_name_from_id(self, image_id):
         """
@@ -1030,6 +1068,8 @@ class Swim(DnacBase):
                 want["url_import_details"] = config.get("import_image_details").get("url_details")
             elif want["import_type"] == "local":
                 want["local_import_details"] = config.get("import_image_details").get("local_image_details")
+            elif want["import_type"] == "cco":
+                want["cco_import_details"] = config.get("import_image_details").get("cco_image_details")
             else:
                 self.log("The import type '{0}' provided is incorrect. Only 'local' or 'remote' are supported.".format(want["import_type"]), "CRITICAL")
                 self.module.fail_json(msg="Incorrect import type. Supported Values: local or remote")
@@ -1069,14 +1109,21 @@ class Swim(DnacBase):
                 self.result['changed'] = False
                 return self
 
+            self.log("image_type - {0}".format(import_type))
             if import_type == "remote":
                 image_name = self.want.get("url_import_details").get("payload")[0].get("source_url")
-            else:
+            elif import_type == "local":
                 image_name = self.want.get("local_import_details").get("file_path")
+            else:
+                self.log("inside cco image_name")
+                image_name = self.want.get("cco_import_details").get("image_name")
+                self.log("image_name 1 - {0}".format(image_name))
 
             # Code to check if the image already exists in Catalyst Center
             name = image_name.split('/')[-1]
+            self.log("image_name 2 - {0}".format(name))
             image_exist = self.is_image_exist(name)
+            self.log("image_exist - {0}".format(image_exist))
 
             import_key_mapping = {
                 'source_url': 'sourceURL',
@@ -1096,6 +1143,7 @@ class Swim(DnacBase):
                 return self
 
             if self.want.get("import_type") == "remote":
+                self.log("inside remote")
                 import_payload_dict = {}
                 temp_payload = self.want.get("url_import_details").get("payload")[0]
                 keys_to_change = list(import_key_mapping.keys())
@@ -1113,7 +1161,8 @@ class Swim(DnacBase):
                     scheduleOrigin=self.want.get("url_import_details").get("schedule_origin"),
                 )
                 import_function = 'import_software_image_via_url'
-            else:
+
+            elif self.want.get("import_type") == "local":
                 file_path = self.want.get("local_import_details").get("file_path")
                 import_params = dict(
                     is_third_party=self.want.get("local_import_details").get("is_third_party"),
@@ -1124,14 +1173,24 @@ class Swim(DnacBase):
                     multipart_monitor_callback=None
                 )
                 import_function = 'import_local_software_image'
+            
+            else:
+                self.log("inside cco")
+                cco_image_id = self.get_cco_image_id(name)
+                self.log("get_cco_image_type")
+                self.log(cco_image_id)
+                import_function = 'download_the_software_image'
 
-            response = self.dnac._exec(
-                family="software_image_management_swim",
-                function=import_function,
-                op_modifies=True,
-                params=import_params,
-            )
-            self.log("Received API response from {0}: {1}".format(import_function, str(response)), "DEBUG")
+            if self.dnac_version >= self.version_2_3_7_6:
+                response = self.import_cco_image(cco_image_id, import_function)
+            else:
+                response = self.dnac._exec(
+                    family="software_image_management_swim",
+                    function=import_function,
+                    op_modifies=True,
+                    params=import_params,
+                )
+                self.log("Received API response from {0}: {1}".format(import_function, str(response)), "DEBUG")
 
             task_details = {}
             task_id = response.get("response").get("taskId")
@@ -1691,8 +1750,10 @@ class Swim(DnacBase):
 
         if import_type == "remote":
             image_name = self.want.get("url_import_details").get("payload")[0].get("source_url")
-        else:
+        elif import_type == "local":
             image_name = self.want.get("local_import_details").get("file_path")
+        else:
+            image_name = self.want.get("cco_import_details").get("image_name")
 
         # Code to check if the image already exists in Catalyst Center
         name = image_name.split('/')[-1]
